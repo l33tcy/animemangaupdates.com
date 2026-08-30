@@ -412,18 +412,18 @@ add_filter( 'auto_update_translation', '__return_true' );
 add_filter( 'login_headerurl', function () { return home_url( '/' ); } );
 add_filter( 'login_headertext', function () { return get_bloginfo( 'name' ); } );
 add_action( 'login_enqueue_scripts', function () {
-	$logo = '';
 	$id   = get_theme_mod( 'custom_logo' );
-	if ( $id ) {
-		$logo = wp_get_attachment_image_url( $id, 'medium' );
-	}
+	$logo = $id ? wp_get_attachment_url( $id ) : '';
 	?>
 	<style>
 		body.login { background: #0b2545; }
+		<?php if ( $logo ) : ?>
 		.login h1 a {
-			<?php if ( $logo ) : ?>background-image: url('<?php echo esc_url( $logo ); ?>');<?php endif; ?>
-			background-size: contain; background-position: center; width: 100%; height: 66px; margin-bottom: 8px;
+			background-image: url('<?php echo esc_url( $logo ); ?>') !important;
+			background-size: contain !important; background-position: center !important;
+			width: 260px !important; height: 68px !important; margin: 0 auto 10px !important;
 		}
+		<?php endif; ?>
 		.login form {
 			background: #122642; border: 1px solid #223a59; border-radius: 12px;
 			box-shadow: 0 24px 60px -24px rgba(0,0,0,.6); padding: 26px 24px;
