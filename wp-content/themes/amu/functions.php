@@ -459,3 +459,51 @@ add_action( 'login_enqueue_scripts', function () {
 	</style>
 	<?php
 } );
+
+/* -------------------------------------------------------------- clean category/tag URLs (no /category/ or /tag/ base) */
+
+// Strip the base from generated term links (theme, menus, breadcrumbs, sitemaps).
+add_filter( 'category_link', function ( $link ) {
+	return preg_replace( '#/category/#', '/', $link, 1 );
+} );
+add_filter( 'term_link', function ( $link, $term, $tax ) {
+	if ( 'post_tag' === $tax ) {
+		$link = preg_replace( '#/tag/#', '/', $link, 1 );
+	}
+	return $link;
+}, 10, 3 );
+
+// Categories resolve at the root (hierarchical), replacing the /category/ rules.
+add_filter( 'category_rewrite_rules', function () {
+	$rules = array();
+	foreach ( get_categories( array( 'hide_empty' => false ) ) as $c ) {
+		$path = trim( get_category_parents( $c->term_id, false, '/', true ), '/' );
+		if ( '' === $path ) { continue; }
+		$rules[ $path . '/feed/(feed|rdf|rss|rss2|atom)/?$' ] = 'index.php?category_name=' . $path . '&feed=$matches[1]';
+		$rules[ $path . '/page/?([0-9]{1,})/?$' ]             = 'index.php?category_name=' . $path . '&paged=$matches[1]';
+		$rules[ $path . '/?$' ]                               = 'index.php?category_name=' . $path;
+	}
+	return $rules;
+} );
+
+// Tags resolve at the root, replacing the /tag/ rules.
+add_filter( 'tag_rewrite_rules', function () {
+	$rules = array();
+	foreach ( get_terms( array( 'taxonomy' => 'post_tag', 'hide_empty' => false ) ) as $t ) {
+		if ( is_wp_error( $t ) || empty( $t->slug ) ) { continue; }
+		$s = $t->slug;
+		$rules[ $s . '/feed/(feed|rdf|rss|rss2|atom)/?$' ] = 'index.php?tag=' . $s . '&feed=$matches[1]';
+		$rules[ $s . '/page/?([0-9]{1,})/?$' ]             = 'index.php?tag=' . $s . '&paged=$matches[1]';
+		$rules[ $s . '/?$' ]                               = 'index.php?tag=' . $s;
+	}
+	return $rules;
+} );
+
+// 301 any old /category/... or /tag/... URL to the clean root path.
+add_action( 'template_redirect', function () {
+	$uri = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+	if ( preg_match( '#^/(?:category|tag)/(.+)$#', $uri, $m ) ) {
+		wp_safe_redirect( home_url( '/' . ltrim( $m[1], '/' ) ), 301 );
+		exit;
+	}
+} );
