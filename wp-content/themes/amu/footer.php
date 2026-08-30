@@ -22,10 +22,15 @@ $amu_email = 'contact@animemangaupdates.com';
 </main><!-- #main -->
 
 <footer class="site-footer">
+	<span class="footer-accent" aria-hidden="true"></span>
 	<div class="wrap">
 
 		<div class="gnews-callout">
-			<span class="gn-txt"><?php esc_html_e( 'Stay ahead of every release, follow us on Google News and add us as a favorite.', 'amu' ); ?></span>
+			<span class="gn-mark" aria-hidden="true"><?php echo amu_gnews_icon(); // phpcs:ignore ?></span>
+			<span class="gn-txt">
+				<strong><?php esc_html_e( 'Never miss a release.', 'amu' ); ?></strong>
+				<?php esc_html_e( 'Follow us on Google News and add us as a favorite.', 'amu' ); ?>
+			</span>
 			<a class="btn-gnews" href="<?php echo esc_url( amu_gnews_url() ); ?>" target="_blank" rel="noopener"><?php echo amu_gnews_icon(); // phpcs:ignore ?><span class="label"><?php esc_html_e( 'Follow on Google News', 'amu' ); ?></span></a>
 		</div>
 
@@ -40,10 +45,19 @@ $amu_email = 'contact@animemangaupdates.com';
 				}
 				?>
 				<p><?php bloginfo( 'description' ); ?></p>
+
+				<?php $amu_footer_cats = amu_top_categories( 6 ); ?>
+				<?php if ( $amu_footer_cats ) : ?>
+					<nav class="footer-chips" aria-label="<?php esc_attr_e( 'Browse categories', 'amu' ); ?>">
+						<?php foreach ( $amu_footer_cats as $amu_c ) : ?>
+							<a href="<?php echo esc_url( get_category_link( $amu_c->term_id ) ); ?>" style="--chip:<?php echo esc_attr( amu_term_color( $amu_c ) ); ?>"><?php echo esc_html( $amu_c->name ); ?></a>
+						<?php endforeach; ?>
+					</nav>
+				<?php endif; ?>
 			</div>
 
 			<div class="footer-col">
-				<h4><?php esc_html_e( 'Sections', 'amu' ); ?></h4>
+				<h4><?php esc_html_e( 'Explore', 'amu' ); ?></h4>
 				<ul><?php wp_list_categories( array( 'title_li' => '', 'number' => 6, 'orderby' => 'count', 'order' => 'DESC' ) ); ?></ul>
 			</div>
 
@@ -70,6 +84,7 @@ $amu_email = 'contact@animemangaupdates.com';
 
 		<div class="footer-bottom">
 			<span>&copy; <?php echo esc_html( date_i18n( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>. <?php esc_html_e( 'All rights reserved.', 'amu' ); ?></span>
+			<span class="footer-tagline"><?php esc_html_e( 'Anime &amp; manga news, every single day.', 'amu' ); ?></span>
 		</div>
 	</div>
 </footer>

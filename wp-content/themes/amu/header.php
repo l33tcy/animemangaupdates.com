@@ -77,7 +77,7 @@ if ( ! function_exists( 'amu_menu_fallback' ) ) {
 			<button class="drawer-close js-drawer-close" aria-label="<?php esc_attr_e( 'Close menu', 'amu' ); ?>">&times;</button>
 		</div>
 		<nav aria-label="<?php esc_attr_e( 'Mobile', 'amu' ); ?>"><?php wp_nav_menu( $amu_menu_args ); ?></nav>
-		<a class="drawer-gnews" href="<?php echo esc_url( amu_gnews_url() ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Follow on Google News', 'amu' ); ?></a>
+		<a class="drawer-gnews btn-gnews" href="<?php echo esc_url( amu_gnews_url() ); ?>" target="_blank" rel="noopener"><?php echo amu_gnews_icon(); // phpcs:ignore ?><span class="label"><?php esc_html_e( 'Follow on Google News', 'amu' ); ?></span></a>
 	</div>
 </div>
 

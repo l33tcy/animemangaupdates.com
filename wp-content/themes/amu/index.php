@@ -47,6 +47,15 @@ $is_front = ( is_home() || is_front_page() ) && ! is_paged();
 		<div class="notice"><p><?php esc_html_e( 'No posts yet, the first scoop is coming.', 'amu' ); ?></p></div>
 	<?php endif; ?>
 
+	<?php
+	// Front page only: a dedicated row per key category (Manga, Anime, Gaming).
+	if ( $is_front ) {
+		foreach ( amu_home_sections() as $amu_slug ) {
+			amu_home_section( $amu_slug );
+		}
+	}
+	?>
+
 </div>
 <?php
 get_footer();

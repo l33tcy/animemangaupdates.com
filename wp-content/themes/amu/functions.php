@@ -14,6 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once get_template_directory() . '/inc/watermark.php'; // logo + domain watermark on uploads
+
 /* -------------------------------------------------------------- setup */
 function amu_setup() {
 	add_theme_support( 'title-tag' );
@@ -156,6 +158,50 @@ function amu_top_categories( $n = 5 ) {
 	return get_categories( array( 'orderby' => 'count', 'order' => 'DESC', 'number' => $n, 'hide_empty' => true ) );
 }
 
+/**
+ * Render a homepage category section: coloured heading (linked to the archive)
+ * + a row of the most recent posts in that category. Skips silently if the
+ * category doesn't exist or has no posts.
+ *
+ * @param string $slug  Category slug (e.g. 'manga', 'anime', 'gaming').
+ * @param int    $count Number of cards to show.
+ */
+function amu_home_section( $slug, $count = 4 ) {
+	$cat = get_category_by_slug( $slug );
+	if ( ! $cat || 0 === (int) $cat->count ) {
+		return;
+	}
+	$q = new WP_Query( array(
+		'category_name'       => $slug,
+		'posts_per_page'      => $count,
+		'ignore_sticky_posts' => true,
+		'no_found_rows'       => true,
+	) );
+	if ( ! $q->have_posts() ) {
+		wp_reset_postdata();
+		return;
+	}
+	$color = amu_term_color( $cat );
+	printf(
+		'<section class="home-section" style="--sec:%1$s"><div class="section-head"><span class="sec-dot"></span><h2><a href="%2$s">%3$s</a></h2><span class="bar"></span><a class="sec-more" href="%2$s">%4$s</a></div><div class="card-grid">',
+		esc_attr( $color ),
+		esc_url( get_category_link( $cat->term_id ) ),
+		esc_html( $cat->name ),
+		esc_html__( 'View all', 'amu' )
+	);
+	while ( $q->have_posts() ) {
+		$q->the_post();
+		get_template_part( 'template-parts/content', 'card', array( 'lead' => false ) );
+	}
+	echo '</div></section>';
+	wp_reset_postdata();
+}
+
+/** Homepage section categories, filterable. Default: Manga, Anime, Gaming. */
+function amu_home_sections() {
+	return apply_filters( 'amu_home_sections', array( 'manga', 'anime', 'gaming' ) );
+}
+
 /** Trending search terms: most-used tags (fallback: categories). */
 function amu_trending_terms( $n = 8 ) {
 	$tags = get_tags( array( 'orderby' => 'count', 'order' => 'DESC', 'number' => $n, 'hide_empty' => true ) );
@@ -171,9 +217,12 @@ function amu_gnews_url() {
 	return apply_filters( 'amu_gnews_url', $default );
 }
 
-/** Google News logo mark for the Follow CTA (nominative use to link to the service). */
+/** Official Google News brand mark for the Follow CTA (nominative use to link to the service). */
 function amu_gnews_icon() {
-	return '<svg class="gn-logo" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.6" fill="#fff"/><rect x="3" y="4" width="18" height="4.4" rx="2.6" fill="#4285F4"/><rect x="3" y="6" width="18" height="2.4" fill="#4285F4"/><rect x="5.4" y="10.6" width="6" height="1.8" rx=".9" fill="#EA4335"/><rect x="5.4" y="13.8" width="6" height="1.8" rx=".9" fill="#34A853"/><rect x="13" y="10.6" width="5.6" height="5" rx="1" fill="#FBBC05"/></svg>';
+	return sprintf(
+		'<img class="gn-logo" src="%s" width="22" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async">',
+		esc_url( get_template_directory_uri() . '/assets/google-news.svg' )
+	);
 }
 
 /** [amu_email] renders a "Show email" button that reveals the address via JS (anti-spam). */
