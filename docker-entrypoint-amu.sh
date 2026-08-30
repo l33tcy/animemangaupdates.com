@@ -27,6 +27,9 @@ rm -f /var/www/html/wp-config.php 2>/dev/null || true
   for _ in $(seq 1 60); do wpc core is-installed >/dev/null 2>&1 && break; sleep 5; done
   wpc core is-installed >/dev/null 2>&1 || exit 0
 
+  # Apply any DB schema upgrade after a core version bump (idempotent).
+  wpc core update-db >/dev/null 2>&1 || true
+
   # Keep the persisted plugins + git theme active (idempotent every deploy).
   wpc plugin is-active advanced-custom-fields >/dev/null 2>&1 || wpc plugin activate advanced-custom-fields >/dev/null 2>&1 || true
   wpc plugin is-active wordpress-seo          >/dev/null 2>&1 || wpc plugin activate wordpress-seo          >/dev/null 2>&1 || true

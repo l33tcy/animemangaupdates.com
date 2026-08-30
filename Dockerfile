@@ -6,7 +6,8 @@
 #              volume and update via wp-admin — deploys never overwrite them.
 #   DATA    -> persisted: uploads in the wp-content volume, everything else in the
 #              separate MySQL service.
-FROM wordpress:6.7-php8.3-apache
+# WP 6.9 base — Yoast SEO 28.x requires >= 6.9.
+FROM wordpress:6.9-php8.3-apache
 
 # Build/runtime tools + wp-cli (used by the entrypoint's one-time setup).
 RUN set -eux; \
