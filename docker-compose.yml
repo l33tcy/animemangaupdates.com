@@ -1,29 +1,11 @@
 services:
-  db:
-    image: mysql:8
-    restart: unless-stopped
-    volumes:
-      - amu_db:/var/lib/mysql
-    environment:
-      MYSQL_DATABASE: ${DB_NAME:-amu}
-      MYSQL_USER: ${DB_USER:-amu}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-${DB_PASSWORD}}
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-
   wordpress:
     build: .
     restart: unless-stopped
-    depends_on:
-      db:
-        condition: service_healthy
     environment:
-      WORDPRESS_DB_HOST: ${DB_HOST:-db}
+      # DB is a separate Dokploy MySQL service — DB_HOST is its appName on
+      # dokploy-network (set in the Dokploy env, no bundled db here).
+      WORDPRESS_DB_HOST: ${DB_HOST}
       WORDPRESS_DB_NAME: ${DB_NAME:-amu}
       WORDPRESS_DB_USER: ${DB_USER:-amu}
       WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
@@ -36,8 +18,7 @@ services:
       - amu_wpcontent:/var/www/html/wp-content
 
 # Ingress (Traefik labels + dokploy-network) is added by Dokploy when a domain is
-# attached to the `wordpress` service — don't hardcode it, it breaks the db path.
+# attached to the `wordpress` service — don't hardcode it.
 
 volumes:
-  amu_db:
   amu_wpcontent:
