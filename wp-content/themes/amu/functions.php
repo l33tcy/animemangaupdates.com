@@ -241,6 +241,14 @@ function amu_add_toc( $content ) {
 }
 add_filter( 'the_content', 'amu_add_toc', 9 );
 
+/** Wrap article tables in a scroll container so wide tables stay responsive. */
+add_filter( 'the_content', function ( $content ) {
+	if ( ! is_singular( 'post' ) || false === stripos( $content, '<table' ) ) {
+		return $content;
+	}
+	return preg_replace( '/<table\b.*?<\/table>/is', '<div class="table-wrap">$0</div>', $content );
+}, 11 );
+
 function amu_excerpt_length() { return 18; }
 add_filter( 'excerpt_length', 'amu_excerpt_length' );
 function amu_excerpt_more() { return '…'; }
