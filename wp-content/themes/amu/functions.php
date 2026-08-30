@@ -365,3 +365,87 @@ add_action( 'wp_login_failed', function () {
 	set_transient( $k, (int) get_transient( $k ) + 1, 15 * MINUTE_IN_SECONDS );
 } );
 add_action( 'wp_login', function () { delete_transient( 'amu_lf_' . md5( amu_client_ip() ) ); } );
+
+/* -------------------------------------------------------------- search hardening */
+
+// Sanitize the search query: strip tags/entities and cap the length (defensive,
+// on top of WordPress's own escaping) so nothing malicious is stored or reflected.
+add_action( 'pre_get_posts', function ( $q ) {
+	if ( is_admin() || ! $q->is_main_query() || ! $q->is_search() ) {
+		return;
+	}
+	$s = (string) $q->get( 's' );
+	$s = trim( wp_strip_all_tags( wp_unslash( $s ) ) );
+	$s = preg_replace( '/[<>]/', '', $s );
+	if ( function_exists( 'mb_substr' ) ) {
+		$s = mb_substr( $s, 0, 120 );
+	}
+	$q->set( 's', $s );
+} );
+
+// Empty search (e.g. /?s=) should not list the whole site; send it home.
+add_action( 'template_redirect', function () {
+	if ( is_search() && '' === trim( (string) get_search_query() ) ) {
+		wp_safe_redirect( home_url( '/' ), 302 );
+		exit;
+	}
+} );
+
+// Search result pages: noindex, follow (avoid search-spam getting indexed).
+add_filter( 'wp_robots', function ( $robots ) {
+	if ( is_search() ) {
+		$robots['noindex'] = true;
+		$robots['follow']  = true;
+	}
+	return $robots;
+} );
+
+/* -------------------------------------------------------------- automatic updates */
+add_filter( 'automatic_updater_disabled', '__return_false' );
+add_filter( 'auto_update_core', '__return_true' );
+add_filter( 'allow_major_auto_core_updates', '__return_true' );
+add_filter( 'auto_update_plugin', '__return_true' );
+add_filter( 'auto_update_theme', '__return_true' );
+add_filter( 'auto_update_translation', '__return_true' );
+
+/* -------------------------------------------------------------- minimal branded login page */
+add_filter( 'login_headerurl', function () { return home_url( '/' ); } );
+add_filter( 'login_headertext', function () { return get_bloginfo( 'name' ); } );
+add_action( 'login_enqueue_scripts', function () {
+	$logo = '';
+	$id   = get_theme_mod( 'custom_logo' );
+	if ( $id ) {
+		$logo = wp_get_attachment_image_url( $id, 'medium' );
+	}
+	?>
+	<style>
+		body.login { background: #0b2545; }
+		.login h1 a {
+			<?php if ( $logo ) : ?>background-image: url('<?php echo esc_url( $logo ); ?>');<?php endif; ?>
+			background-size: contain; background-position: center; width: 100%; height: 66px; margin-bottom: 8px;
+		}
+		.login form {
+			background: #122642; border: 1px solid #223a59; border-radius: 12px;
+			box-shadow: 0 24px 60px -24px rgba(0,0,0,.6); padding: 26px 24px;
+		}
+		.login form label { color: #eaf1fa; font-size: 14px; }
+		.login input[type="text"], .login input[type="password"] {
+			background: #0e2038; border: 1px solid #223a59; color: #eaf1fa; border-radius: 8px; padding: 10px 12px;
+		}
+		.login input[type="text"]:focus, .login input[type="password"]:focus {
+			border-color: #1e9be8; box-shadow: 0 0 0 2px rgba(30,155,232,.35); outline: 0;
+		}
+		.wp-core-ui .button-primary {
+			background: #1e9be8; border-color: #1682cc; border-radius: 8px; text-shadow: none; box-shadow: none; font-weight: 700;
+		}
+		.wp-core-ui .button-primary:hover { background: #1682cc; border-color: #1682cc; }
+		.login .button.wp-hide-pw { color: #8fa6c2; }
+		.login #nav a, .login #backtoblog a { color: #8fa6c2; }
+		.login #nav a:hover, .login #backtoblog a:hover { color: #1e9be8; }
+		.login #login_error, .login .message, .login .success {
+			border-left-color: #ff7a1a; background: #122642; color: #eaf1fa; border-radius: 8px;
+		}
+		.login .language-switcher { display: none; }
+	</style>
+	<?php
+} );

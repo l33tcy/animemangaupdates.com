@@ -10,8 +10,17 @@ mkdir -p "$WPC/themes/amu" "$WPC/plugins"
 # anonymous volume that pins an OLD core across deploys (the stock entrypoint
 # only copies missing files, never upgrades). Force the docroot core to match the
 # image on every start, excluding the wp-content data volume.
+# Only overwrite when the image ships a NEWER core than the docroot, so WordPress
+# auto-updates that landed in the volume are preserved across deploys.
 if [ -d /usr/src/wordpress ]; then
-  ( cd /usr/src/wordpress && tar --exclude='./wp-content' -cf - . ) | ( cd /var/www/html && tar -xf - )
+  imgver=$(grep -oE "wp_version = '[^']+'" /usr/src/wordpress/wp-includes/version.php | grep -oE '[0-9.]+' | head -1)
+  curver=$(grep -oE "wp_version = '[^']+'" /var/www/html/wp-includes/version.php 2>/dev/null | grep -oE '[0-9.]+' | head -1)
+  if [ -z "$curver" ] || [ "$(printf '%s\n%s\n' "$curver" "$imgver" | sort -V | tail -1)" != "$curver" ]; then
+    ( cd /usr/src/wordpress && tar --exclude='./wp-content' -cf - . ) | ( cd /var/www/html && tar -xf - )
+    echo "[core] synced ${curver:-none} -> $imgver from image"
+  else
+    echo "[core] keeping docroot core $curver (image ships $imgver)"
+  fi
 fi
 
 # THEME — always refreshed from the image (git is the source of truth).
