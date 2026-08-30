@@ -1,6 +1,6 @@
 <?php
 /**
- * Search results — full-width card grid, no sidebar.
+ * Search results, full-width card grid, no sidebar.
  *
  * @package amu
  */

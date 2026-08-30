@@ -1,6 +1,6 @@
 <?php
 /**
- * Single article — full width, no sidebar. Yoast owns SEO/schema in wp_head().
+ * Single article, full width, no sidebar. Yoast owns SEO/schema in wp_head().
  *
  * @package amu
  */

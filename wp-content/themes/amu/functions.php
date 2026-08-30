@@ -3,7 +3,7 @@
  * AnimeMangaUpdates theme functions.
  *
  * SEO is owned by the real Yoast SEO plugin (titles, descriptions, canonical,
- * Open Graph, sitemaps, JSON-LD schema graph) — no bridge plugin. Custom fields
+ * Open Graph, sitemaps, JSON-LD schema graph), no bridge plugin. Custom fields
  * use ACF. Layout is full-width (no sidebars); the main nav is a WordPress menu
  * (Appearance → Menus → "Primary Menu"), fully customizable.
  *
@@ -162,9 +162,13 @@ function amu_trending_terms( $n = 8 ) {
 	return ! empty( $tags ) ? $tags : amu_top_categories( $n );
 }
 
-/** "Subscribe" button target — filterable; defaults to the RSS feed. */
-function amu_subscribe_url() {
-	return apply_filters( 'amu_subscribe_url', get_feed_link() );
+/**
+ * "Follow on Google News" URL. Filterable via 'amu_gnews_url'. Defaults to a
+ * Google News search for the site; set your real publication URL once approved.
+ */
+function amu_gnews_url() {
+	$default = 'https://news.google.com/search?q=' . rawurlencode( get_bloginfo( 'name' ) );
+	return apply_filters( 'amu_gnews_url', $default );
 }
 
 /* -------------------------------------------------------------- SEO structure */
@@ -176,7 +180,7 @@ add_filter( 'wpseo_schema_article_type', function ( $type ) {
 
 /**
  * Ensure single-post breadcrumbs include the (primary) category and its ancestors
- * — e.g. Home › Manga › One Piece › Title. Feeds both the visual Yoast breadcrumb
+ *, e.g. Home › Manga › One Piece › Title. Feeds both the visual Yoast breadcrumb
  * and the BreadcrumbList schema, so the site's hierarchy is consistent for SERP.
  */
 add_filter( 'wpseo_breadcrumb_links', function ( $links ) {
@@ -231,7 +235,7 @@ function amu_add_toc( $content ) {
 		}
 		$items .= '<li><a href="#' . esc_attr( $slug ) . '">' . esc_html( $text ) . '</a></li>';
 	}
-	$toc = '<nav class="toc" aria-label="' . esc_attr__( 'Table of contents', 'amu' ) . '"><p class="toc-title">' . esc_html__( 'Table of contents', 'amu' ) . '</p><ol>' . $items . '</ol></nav>';
+	$toc = '<details class="toc" open><summary>' . esc_html__( 'Table of contents', 'amu' ) . '</summary><ol>' . $items . '</ol></details>';
 	$pos = stripos( $content, '</p>' );
 	return false !== $pos ? substr( $content, 0, $pos + 4 ) . $toc . substr( $content, $pos + 4 ) : $toc . $content;
 }
@@ -254,3 +258,60 @@ add_filter( 'xmlrpc_methods', function ( $methods ) { unset( $methods['pingback.
 remove_action( 'wp_head', 'rsd_link' );
 remove_action( 'wp_head', 'wlwmanifest_link' );
 add_action( 'pre_ping', function ( &$links ) { $links = array(); } );
+
+/* -------------------------------------------------------------- REST + login hardening
+ * DDoS and edge rate-limiting are handled by Cloudflare (origin is firewalled to
+ * CF IPs). These are the app-level defenses: stop user enumeration and brute force.
+ */
+
+// Disable the REST user endpoints (user enumeration) while keeping the rest of the
+// REST API working, incl. wp/v2/search used by the live search suggestions.
+add_filter( 'rest_endpoints', function ( $endpoints ) {
+	foreach ( array( '/wp/v2/users', '/wp/v2/users/(?P<id>[\d]+)' ) as $route ) {
+		unset( $endpoints[ $route ] );
+	}
+	return $endpoints;
+} );
+
+// Block author enumeration via ?author=N and /author/ archives.
+add_action( 'template_redirect', function () {
+	if ( is_author() || ( isset( $_GET['author'] ) && ! is_admin() && ! is_user_logged_in() ) ) {
+		wp_safe_redirect( home_url( '/' ), 301 );
+		exit;
+	}
+} );
+
+// Remove REST discovery + oEmbed author leaks from head/headers.
+remove_action( 'wp_head', 'rest_output_link_wp_head' );
+remove_action( 'template_redirect', 'rest_output_link_header', 11 );
+remove_action( 'wp_head', 'wp_oembed_add_discovery_links' );
+add_filter( 'oembed_response_data', function ( $data ) { unset( $data['author_name'], $data['author_url'] ); return $data; } );
+
+// Generic login error (no username/password hints).
+add_filter( 'login_errors', function () { return __( 'Invalid login details.', 'amu' ); } );
+
+/** Best-effort client IP (real IP behind Cloudflare/Traefik). */
+function amu_client_ip() {
+	foreach ( array( 'HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR' ) as $k ) {
+		if ( ! empty( $_SERVER[ $k ] ) ) {
+			return sanitize_text_field( trim( explode( ',', $_SERVER[ $k ] )[0] ) );
+		}
+	}
+	return '0';
+}
+
+// Brute-force throttle: 5 failed logins per IP per 15 minutes, then a temporary block.
+add_filter( 'authenticate', function ( $user, $username ) {
+	if ( '' === (string) $username ) {
+		return $user;
+	}
+	if ( (int) get_transient( 'amu_lf_' . md5( amu_client_ip() ) ) >= 5 ) {
+		return new WP_Error( 'amu_locked', __( 'Too many failed attempts. Please try again in 15 minutes.', 'amu' ) );
+	}
+	return $user;
+}, 30, 2 );
+add_action( 'wp_login_failed', function () {
+	$k = 'amu_lf_' . md5( amu_client_ip() );
+	set_transient( $k, (int) get_transient( $k ) + 1, 15 * MINUTE_IN_SECONDS );
+} );
+add_action( 'wp_login', function () { delete_transient( 'amu_lf_' . md5( amu_client_ip() ) ); } );

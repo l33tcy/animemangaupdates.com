@@ -1,4 +1,4 @@
-/* AnimeMangaUpdates — navbar drawer, search overlay w/ live suggestions, theme toggle.
+/* AnimeMangaUpdates, navbar drawer, search overlay w/ live suggestions, theme toggle.
  * All dynamic content is built with DOM APIs + textContent (no innerHTML) to keep
  * untrusted input (query strings, REST titles) inert. */
 (function () {
@@ -90,7 +90,7 @@
       .then(function (r) { return r.ok ? r.json() : []; })
       .then(function (items) {
         clear(suggest);
-        if (!items || !items.length) { suggest.appendChild(el('div', 's-empty', 'No results for “' + q + '” — press Enter to search anyway.')); return; }
+        if (!items || !items.length) { suggest.appendChild(el('div', 's-empty', 'No results for “' + q + '”, press Enter to search anyway.')); return; }
         items.forEach(function (it) { suggest.appendChild(suggestRow(it)); });
       })
       .catch(function () {});
@@ -106,4 +106,16 @@
 
   /* ---------------------------------------------------- escape closes overlays */
   doc.addEventListener('keydown', function (e) { if (e.key === 'Escape') { close(overlay); close(drawer); } });
+
+  /* ---------------------------------------------------- back to top */
+  var toTop = $('.js-back-to-top');
+  if (toTop) {
+    var onScroll = function () { toTop.classList.toggle('show', (window.pageYOffset || doc.documentElement.scrollTop) > 500); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    toTop.addEventListener('click', function () {
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    });
+  }
 })();

@@ -1,6 +1,6 @@
 <?php
 /**
- * Home / blog index — full-width "Featured" card grid, no sidebar.
+ * Home / blog index, full-width "Featured" card grid, no sidebar.
  *
  * @package amu
  */
@@ -14,7 +14,7 @@ $is_front = ( is_home() || is_front_page() ) && ! is_paged();
 		<div class="feature-head">
 			<div class="intro">
 				<h1><?php esc_html_e( 'Featured', 'amu' ); ?></h1>
-				<p><?php esc_html_e( 'The hottest anime &amp; manga news right now — releases, reviews and everything worth knowing.', 'amu' ); ?></p>
+				<p><?php esc_html_e( 'The hottest anime &amp; manga news right now, releases, reviews and everything worth knowing.', 'amu' ); ?></p>
 			</div>
 			<nav class="filters" aria-label="<?php esc_attr_e( 'Categories', 'amu' ); ?>">
 				<?php foreach ( amu_top_categories( 5 ) as $cat ) : ?>
@@ -44,7 +44,7 @@ $is_front = ( is_home() || is_front_page() ) && ! is_paged();
 			<?php echo wp_kses_post( paginate_links( array( 'mid_size' => 1, 'prev_text' => '←', 'next_text' => '→' ) ) ); ?>
 		</nav>
 	<?php else : ?>
-		<div class="notice"><p><?php esc_html_e( 'No posts yet — the first scoop is coming.', 'amu' ); ?></p></div>
+		<div class="notice"><p><?php esc_html_e( 'No posts yet, the first scoop is coming.', 'amu' ); ?></p></div>
 	<?php endif; ?>
 
 </div>

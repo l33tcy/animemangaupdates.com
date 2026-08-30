@@ -1,6 +1,6 @@
 <?php
 /**
- * Archive — full-width card grid, no sidebar.
+ * Archive, full-width card grid, no sidebar.
  *
  * @package amu
  */

@@ -1,6 +1,6 @@
 <?php
 /**
- * Tag archive — dedicated template (separate from categories) for clean SEO/URL
+ * Tag archive, dedicated template (separate from categories) for clean SEO/URL
  * structure. Full-width card grid, breadcrumbs, tag description.
  *
  * @package amu
@@ -19,7 +19,7 @@ get_header();
 					echo wp_kses_post( tag_description() );
 				} else {
 					/* translators: %s: tag name */
-					printf( esc_html__( 'Everything tagged “%s” — news, spoilers and release updates.', 'amu' ), esc_html( single_tag_title( '', false ) ) );
+					printf( esc_html__( 'Everything tagged “%s”, news, spoilers and release updates.', 'amu' ), esc_html( single_tag_title( '', false ) ) );
 				}
 				?>
 			</p>

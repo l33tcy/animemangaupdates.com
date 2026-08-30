@@ -1,16 +1,16 @@
 # animemangaupdates.com
 
-Anime & manga news site — WordPress with a custom classic theme (`amu`), deployed
+Anime & manga news site, WordPress with a custom classic theme (`amu`), deployed
 as a Dokploy Compose service behind Traefik.
 
 ## Architecture
 
-- **`wordpress`** — `wordpress:6.7-php8.3-apache`, built from this repo (`build: .`).
+- **`wordpress`**, `wordpress:6.7-php8.3-apache`, built from this repo (`build: .`).
   The theme is baked into the image and re-synced to the persistent `wp-content`
   volume on every start (`docker-entrypoint-amu.sh`). `wp-config.php` is regenerated
   from environment each start.
-- **`db`** — dedicated `mysql:8` with its own `amu_db` volume.
-- **Persistence** — `amu_wpcontent` (uploads, plugins) and `amu_db` (database)
+- **`db`**, dedicated `mysql:8` with its own `amu_db` volume.
+- **Persistence**, `amu_wpcontent` (uploads, plugins) and `amu_db` (database)
   survive deploys. The **theme is git-managed**: push here, redeploy, it updates.
 
 ## Deploy (Dokploy)

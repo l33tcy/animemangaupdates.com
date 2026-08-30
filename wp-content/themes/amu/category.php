@@ -1,6 +1,6 @@
 <?php
 /**
- * Category archive — dedicated template (separate from tags) for clean SEO/URL
+ * Category archive, dedicated template (separate from tags) for clean SEO/URL
  * structure. Full-width card grid, breadcrumbs, category description.
  *
  * @package amu
