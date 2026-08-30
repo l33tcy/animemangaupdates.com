@@ -25,15 +25,6 @@ $amu_email = 'contact@animemangaupdates.com';
 	<span class="footer-accent" aria-hidden="true"></span>
 	<div class="wrap">
 
-		<div class="gnews-callout">
-			<span class="gn-mark" aria-hidden="true"><?php echo amu_gnews_icon(); // phpcs:ignore ?></span>
-			<span class="gn-txt">
-				<strong><?php esc_html_e( 'Never miss a release.', 'amu' ); ?></strong>
-				<?php esc_html_e( 'Follow us on Google News and add us as a favorite.', 'amu' ); ?>
-			</span>
-			<a class="btn-gnews" href="<?php echo esc_url( amu_gnews_url() ); ?>" target="_blank" rel="noopener"><?php echo amu_gnews_icon(); // phpcs:ignore ?><span class="label"><?php esc_html_e( 'Follow on Google News', 'amu' ); ?></span></a>
-		</div>
-
 		<div class="footer-top">
 			<div class="footer-brand">
 				<?php

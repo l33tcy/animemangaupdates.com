@@ -43,6 +43,9 @@ get_header();
 						<?php endforeach; ?>
 					</div>
 				<?php endif; ?>
+
+				<?php amu_post_share(); ?>
+				<?php amu_gnews_callout(); ?>
 			</article>
 
 			<?php

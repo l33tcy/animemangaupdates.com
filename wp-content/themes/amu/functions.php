@@ -225,6 +225,48 @@ function amu_gnews_icon() {
 	);
 }
 
+/** Google News follow callout (shown on single posts only). */
+function amu_gnews_callout() {
+	?>
+	<div class="gnews-callout">
+		<span class="gn-mark" aria-hidden="true"><?php echo amu_gnews_icon(); // phpcs:ignore ?></span>
+		<span class="gn-txt"><strong><?php esc_html_e( 'Never miss a release.', 'amu' ); ?></strong> <?php esc_html_e( 'Follow us on Google News and add us as a favorite.', 'amu' ); ?></span>
+		<a class="btn-gnews" href="<?php echo esc_url( amu_gnews_url() ); ?>" target="_blank" rel="noopener"><?php echo amu_gnews_icon(); // phpcs:ignore ?><span class="label"><?php esc_html_e( 'Follow on Google News', 'amu' ); ?></span></a>
+	</div>
+	<?php
+}
+
+/**
+ * Social share buttons for the current post — real brand icons, brand-coloured
+ * buttons. Icons live in assets/share/<slug>.svg.
+ */
+function amu_post_share() {
+	$url   = rawurlencode( get_permalink() );
+	$title = rawurlencode( get_the_title() );
+	$base  = get_template_directory_uri() . '/assets/share/';
+	// slug => [ label, brand colour, share URL ]
+	$items = array(
+		'x'        => array( 'X', '#000000', "https://twitter.com/intent/tweet?url={$url}&text={$title}" ),
+		'facebook' => array( 'Facebook', '#1877F2', "https://www.facebook.com/sharer/sharer.php?u={$url}" ),
+		'whatsapp' => array( 'WhatsApp', '#25D366', "https://api.whatsapp.com/send?text={$title}%20{$url}" ),
+		'reddit'   => array( 'Reddit', '#FF4500', "https://www.reddit.com/submit?url={$url}&title={$title}" ),
+		'telegram' => array( 'Telegram', '#26A5E4', "https://t.me/share/url?url={$url}&text={$title}" ),
+	);
+	echo '<div class="share"><span class="share-label">' . esc_html__( 'Share', 'amu' ) . '</span><ul class="share-list">';
+	foreach ( $items as $slug => $p ) {
+		printf(
+			'<li><a class="share-btn" style="--brand:%1$s" href="%2$s" target="_blank" rel="noopener nofollow" aria-label="%3$s"><img src="%4$s%5$s.svg" width="18" height="18" alt="" aria-hidden="true" loading="lazy" decoding="async"></a></li>',
+			esc_attr( $p[1] ),
+			esc_url( $p[2] ),
+			/* translators: %s: platform name */
+			esc_attr( sprintf( __( 'Share on %s', 'amu' ), $p[0] ) ),
+			esc_url( $base ),
+			esc_attr( $slug )
+		);
+	}
+	echo '</ul></div>';
+}
+
 /** [amu_email] renders a "Show email" button that reveals the address via JS (anti-spam). */
 add_shortcode( 'amu_email', function () {
 	return '<button type="button" class="reveal-email js-reveal-email" data-u="contact" data-d="animemangaupdates.com">' . esc_html__( 'Show email', 'amu' ) . '</button>';

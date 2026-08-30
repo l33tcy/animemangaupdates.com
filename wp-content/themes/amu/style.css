@@ -3,7 +3,7 @@ Theme Name: AnimeMangaUpdates
 Theme URI: https://animemangaupdates.com
 Description: Modern anime and manga news magazine theme, using the brand red and blue palette with solid colours, a full width Featured grid, animated mobile menu, collapsible table of contents and a full screen search with live suggestions. Yoast and ACF ready.
 Author: l33tcy
-Version: 5.8.0
+Version: 5.9.0
 Requires at least: 6.0
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
@@ -102,7 +102,15 @@ img.custom-logo { height: 150px !important; width: auto; max-height: 150px; disp
 .btn-gnews:hover { background: var(--primary-2); color: #fff; box-shadow: 0 8px 22px -10px rgba(255,48,64,.75); }
 .btn-gnews:active { transform: translateY(1px); }
 .btn-gnews .gn-logo { width: 20px; height: 16px; background: #fff; padding: 3px; border-radius: 5px; box-sizing: content-box; box-shadow: 0 1px 2px rgba(0,0,0,.2); }
-@media (max-width: 620px) { .header-top .btn-gnews { padding: 0 12px; } }
+
+/* Social share (single posts) — real brand icons on brand-coloured buttons */
+.share { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 34px 0 8px; padding-top: 22px; border-top: 1px solid var(--line); }
+.share-label { font-family: var(--f-label); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.share-list { list-style: none; display: flex; gap: 10px; margin: 0; padding: 0; flex-wrap: wrap; }
+.share-btn { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: var(--brand, var(--primary)); border: 1px solid rgba(255,255,255,.14); box-shadow: 0 6px 16px -9px var(--brand, var(--primary)); transition: transform .15s, box-shadow .15s, filter .15s; }
+.share-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 22px -10px var(--brand, var(--primary)); filter: brightness(1.08); }
+.share-btn:active { transform: translateY(0); }
+.share-btn img { width: 18px; height: 18px; display: block; }
 
 /* ============================================================ mobile drawer (solid) */
 .mobile-drawer { position: fixed; inset: 0; z-index: 80; background: var(--navy); color: #fff; transform: translateY(-100%); opacity: 0; visibility: hidden; transition: transform .42s cubic-bezier(.16,.84,.28,1), opacity .28s, visibility .42s; display: flex; flex-direction: column; padding: 16px 24px 40px; overflow-y: auto; }
@@ -125,11 +133,6 @@ img.custom-logo { height: 150px !important; width: auto; max-height: 150px; disp
 .mobile-drawer a:hover::before, .mobile-drawer a:active::before { transform: translateY(-50%) scaleY(1); }
 .mobile-drawer a::after { content: ""; width: 9px; height: 9px; border-right: 2.5px solid rgba(255,255,255,.4); border-top: 2.5px solid rgba(255,255,255,.4); transform: rotate(45deg); transition: transform .2s, border-color .2s; flex: none; }
 .mobile-drawer a:hover::after, .mobile-drawer a:active::after { border-color: var(--secondary); transform: rotate(45deg) translate(2px, -2px); }
-.drawer-gnews { display: flex; align-items: center; justify-content: center; gap: 12px; align-self: stretch; width: 100%; margin-top: 32px; padding: 17px 24px; height: auto; border-radius: 14px; background: var(--primary); color: #fff; font-family: var(--f-display); font-weight: 800; font-size: 18px; box-shadow: 0 12px 32px -12px rgba(255,48,64,.65); transition: background .15s, transform .15s; }
-.drawer-gnews:hover { background: var(--primary-2); color: #fff; }
-.drawer-gnews:active { transform: translateY(1px); }
-.drawer-gnews .gn-logo { width: 24px; height: 20px; background: #fff; padding: 3px; border-radius: 6px; box-sizing: content-box; }
-.drawer-gnews .label { display: inline; } /* keep the text in the mobile drawer despite the 620px icon-only rule */
 @keyframes drawerIn { to { opacity: 1; transform: none; } }
 
 /* ============================================================ search overlay (solid) */
@@ -306,7 +309,7 @@ img.custom-logo { height: 150px !important; width: auto; max-height: 150px; disp
 
 /* ============================================================ responsive */
 @media (max-width: 1180px) { .card-grid { grid-template-columns: repeat(3, 1fr); } .card.-lead { grid-column: span 3; } .footer-top { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 1024px) { .header-bottom { display: none; } .nav-burger { display: grid; } .header-top .btn-gnews { display: none; } }
+@media (max-width: 1024px) { .header-bottom { display: none; } .nav-burger { display: grid; } }
 @media (max-width: 860px) { .card-grid { grid-template-columns: repeat(2, 1fr); } .card.-lead { grid-column: span 2; } .search-cols { grid-template-columns: 1fr; gap: 30px; } .filters { width: 100%; margin-left: 0; } }
 @media (max-width: 560px) { body { font-size: 16px; } .card-grid { grid-template-columns: 1fr; } .card.-lead, .card.-lead .card-thumb { grid-column: span 1; } .feature-head h1, .feature-head h2 { font-size: 44px; } .footer-top { grid-template-columns: 1fr; gap: 26px; } }
 
