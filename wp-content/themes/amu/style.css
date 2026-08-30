@@ -3,7 +3,7 @@ Theme Name: AnimeMangaUpdates
 Theme URI: https://animemangaupdates.com
 Description: Modern anime and manga news magazine theme, using the brand red and blue palette with solid colours, a full width Featured grid, animated mobile menu, collapsible table of contents and a full screen search with live suggestions. Yoast and ACF ready.
 Author: l33tcy
-Version: 5.0.0
+Version: 5.1.0
 Requires at least: 6.0
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
@@ -61,15 +61,15 @@ button { font-family: inherit; cursor: pointer; }
 /* ============================================================ navbar */
 /* Two-row masthead: logo row on top, nav bar below (both sticky). */
 .site-header { position: sticky; top: 0; z-index: 60; color: var(--nav-ink); border-bottom: 2px solid var(--primary); }
-.header-top { background: var(--nav); }
+.header-top { background: #ffffff; border-bottom: 1px solid #e6e8ee; }
 .header-top-inner { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; height: 96px; }
 .brand { display: inline-flex; align-items: center; gap: 3px; font-family: var(--f-display); font-weight: 800; font-size: 24px; letter-spacing: -.02em; color: #fff; white-space: nowrap; }
 .brand b { color: var(--secondary); }
 .header-top-inner .custom-logo-link, .header-top-inner > .brand { grid-column: 2; justify-self: center; }
-.custom-logo-link { display: inline-flex; align-items: center; line-height: 0; background: #fff; padding: 7px 16px; border-radius: 12px; }
-img.custom-logo { height: 62px !important; width: auto; max-height: 62px; display: block; }
-@media (max-width: 768px) { .header-top-inner { height: 74px; } img.custom-logo { height: 46px !important; max-height: 46px; } }
-@media (max-width: 480px) { img.custom-logo { height: 38px !important; max-height: 38px; } }
+.custom-logo-link { display: inline-flex; align-items: center; line-height: 0; }
+img.custom-logo { height: 54px !important; width: auto; max-height: 54px; display: block; }
+@media (max-width: 768px) { .header-top-inner { height: 68px; } img.custom-logo { height: 42px !important; max-height: 42px; } }
+@media (max-width: 480px) { img.custom-logo { height: 34px !important; max-height: 34px; } }
 
 .header-bottom { background: var(--navy); border-top: 1px solid rgba(255,255,255,.08); }
 .primary-nav { display: flex; justify-content: center; min-width: 0; }
@@ -81,6 +81,9 @@ img.custom-logo { height: 62px !important; width: auto; max-height: 62px; displa
 .icon-btn { display: grid; place-items: center; width: 40px; height: 40px; border: 1.5px solid rgba(255,255,255,.35); border-radius: 10px; background: transparent; color: #fff; transition: background .15s, border-color .15s; }
 .icon-btn:hover { background: rgba(255,255,255,.16); border-color: #fff; }
 .icon-btn svg { width: 19px; height: 19px; stroke: currentColor; fill: none; stroke-width: 2; }
+/* icons sit on the white top row: use dark ink instead of white */
+.header-top .icon-btn { border-color: rgba(12,15,23,.2); color: #0c0f17; }
+.header-top .icon-btn:hover { background: rgba(12,15,23,.06); border-color: #0c0f17; }
 .nav-burger { display: none; }
 .theme-toggle .sun { display: block; } .theme-toggle .moon { display: none; }
 :root[data-theme="light"] .theme-toggle .sun { display: none; }
