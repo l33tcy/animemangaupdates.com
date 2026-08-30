@@ -15,15 +15,14 @@
     return /^https?:\/\//i.test(u) || u.charAt(0) === '/' ? u : '#';
   }
 
-  /* ---------------------------------------------------- theme toggle */
-  var toggle = $('.js-theme-toggle');
-  if (toggle) {
+  /* ---------------------------------------------------- theme toggle (navbar + drawer) */
+  $$('.js-theme-toggle').forEach(function (toggle) {
     toggle.addEventListener('click', function () {
       var next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
       root.setAttribute('data-theme', next);
       try { localStorage.setItem('amu-theme', next); } catch (e) {}
     });
-  }
+  });
 
   /* ---------------------------------------------------- open/close helpers */
   function open(node) { if (!node) return; node.classList.add('open'); node.setAttribute('aria-hidden', 'false'); body.classList.add('no-scroll'); }
