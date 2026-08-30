@@ -259,6 +259,39 @@ remove_action( 'wp_head', 'rsd_link' );
 remove_action( 'wp_head', 'wlwmanifest_link' );
 add_action( 'pre_ping', function ( &$links ) { $links = array(); } );
 
+/* -------------------------------------------------------------- disable comments everywhere */
+add_action( 'init', function () {
+	foreach ( get_post_types() as $pt ) {
+		if ( post_type_supports( $pt, 'comments' ) ) {
+			remove_post_type_support( $pt, 'comments' );
+			remove_post_type_support( $pt, 'trackbacks' );
+		}
+	}
+}, 100 );
+add_filter( 'comments_open', '__return_false', 20 );
+add_filter( 'pings_open', '__return_false', 20 );
+add_filter( 'comments_array', '__return_empty_array', 20 );
+add_filter( 'feed_links_show_comments_feed', '__return_false' );
+// Admin: hide the Comments menu, admin-bar node, dashboard widget, and block the page.
+add_action( 'admin_menu', function () { remove_menu_page( 'edit-comments.php' ); } );
+add_action( 'wp_before_admin_bar_render', function () {
+	if ( isset( $GLOBALS['wp_admin_bar'] ) ) { $GLOBALS['wp_admin_bar']->remove_node( 'comments' ); }
+} );
+add_action( 'admin_init', function () {
+	if ( isset( $GLOBALS['pagenow'] ) && 'edit-comments.php' === $GLOBALS['pagenow'] ) {
+		wp_safe_redirect( admin_url() );
+		exit;
+	}
+	remove_meta_box( 'dashboard_recent_comments', 'dashboard', 'normal' );
+} );
+// Drop the comments REST endpoints too.
+add_filter( 'rest_endpoints', function ( $endpoints ) {
+	foreach ( array( '/wp/v2/comments', '/wp/v2/comments/(?P<id>[\d]+)' ) as $route ) {
+		unset( $endpoints[ $route ] );
+	}
+	return $endpoints;
+} );
+
 /* -------------------------------------------------------------- REST + login hardening
  * DDoS and edge rate-limiting are handled by Cloudflare (origin is firewalled to
  * CF IPs). These are the app-level defenses: stop user enumeration and brute force.
