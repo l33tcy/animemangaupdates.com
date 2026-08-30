@@ -416,7 +416,7 @@ add_action( 'login_enqueue_scripts', function () {
 	$logo = $id ? wp_get_attachment_url( $id ) : '';
 	?>
 	<style>
-		body.login { background: #0b2545; }
+		body.login { background: #0c0f17; }
 		<?php if ( $logo ) : ?>
 		.login h1 a {
 			background-image: url('<?php echo esc_url( $logo ); ?>') !important;
@@ -425,25 +425,25 @@ add_action( 'login_enqueue_scripts', function () {
 		}
 		<?php endif; ?>
 		.login form {
-			background: #122642; border: 1px solid #223a59; border-radius: 12px;
+			background: #171b28; border: 1px solid #2b3143; border-radius: 12px;
 			box-shadow: 0 24px 60px -24px rgba(0,0,0,.6); padding: 26px 24px;
 		}
-		.login form label { color: #eaf1fa; font-size: 14px; }
+		.login form label { color: #f2f4f8; font-size: 14px; }
 		.login input[type="text"], .login input[type="password"] {
-			background: #0e2038; border: 1px solid #223a59; color: #eaf1fa; border-radius: 8px; padding: 10px 12px;
+			background: #12151f; border: 1px solid #2b3143; color: #f2f4f8; border-radius: 8px; padding: 10px 12px;
 		}
 		.login input[type="text"]:focus, .login input[type="password"]:focus {
-			border-color: #1e9be8; box-shadow: 0 0 0 2px rgba(30,155,232,.35); outline: 0;
+			border-color: #e01a2b; box-shadow: 0 0 0 2px rgba(224,26,43,.35); outline: 0;
 		}
 		.wp-core-ui .button-primary {
-			background: #1e9be8; border-color: #1682cc; border-radius: 8px; text-shadow: none; box-shadow: none; font-weight: 700;
+			background: #e01a2b; border-color: #bf1524; border-radius: 8px; text-shadow: none; box-shadow: none; font-weight: 700;
 		}
-		.wp-core-ui .button-primary:hover { background: #1682cc; border-color: #1682cc; }
-		.login .button.wp-hide-pw { color: #8fa6c2; }
-		.login #nav a, .login #backtoblog a { color: #8fa6c2; }
-		.login #nav a:hover, .login #backtoblog a:hover { color: #1e9be8; }
+		.wp-core-ui .button-primary:hover { background: #bf1524; border-color: #bf1524; }
+		.login .button.wp-hide-pw { color: #97a1b5; }
+		.login #nav a, .login #backtoblog a { color: #97a1b5; }
+		.login #nav a:hover, .login #backtoblog a:hover { color: #e01a2b; }
 		.login #login_error, .login .message, .login .success {
-			border-left-color: #ff7a1a; background: #122642; color: #eaf1fa; border-radius: 8px;
+			border-left-color: #1f5cff; background: #171b28; color: #f2f4f8; border-radius: 8px;
 		}
 		.login .language-switcher { display: none; }
 	</style>
