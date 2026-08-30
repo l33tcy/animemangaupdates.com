@@ -3,7 +3,7 @@ Theme Name: AnimeMangaUpdates
 Theme URI: https://animemangaupdates.com
 Description: Modern anime and manga news magazine theme, using the brand blue and orange palette with solid colours, a full width Featured grid, animated mobile menu, collapsible table of contents and a full screen search with live suggestions. Yoast and ACF ready.
 Author: l33tcy
-Version: 4.1.0
+Version: 4.2.0
 Requires at least: 6.0
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
@@ -59,17 +59,20 @@ a:hover { color: var(--ink); }
 button { font-family: inherit; cursor: pointer; }
 
 /* ============================================================ navbar */
-.site-header { position: sticky; top: 0; z-index: 60; background: var(--nav); color: var(--nav-ink); border-bottom: 2px solid var(--primary); }
-.nav-inner { display: flex; align-items: center; gap: 22px; height: var(--nav-h); }
-.brand { display: inline-flex; align-items: center; gap: 3px; font-family: var(--f-display); font-weight: 800; font-size: 20px; letter-spacing: -.02em; color: #fff; white-space: nowrap; }
+/* Two-row masthead: logo row on top, nav bar below (both sticky). */
+.site-header { position: sticky; top: 0; z-index: 60; color: var(--nav-ink); border-bottom: 2px solid var(--primary); }
+.header-top { background: var(--nav); }
+.header-top-inner { display: flex; align-items: center; gap: 22px; height: 68px; }
+.brand { display: inline-flex; align-items: center; gap: 3px; font-family: var(--f-display); font-weight: 800; font-size: 22px; letter-spacing: -.02em; color: #fff; white-space: nowrap; }
 .brand b { color: var(--secondary); }
-.custom-logo-link { display: inline-flex; align-items: center; line-height: 0; height: var(--nav-h); }
-img.custom-logo { height: 26px !important; width: auto; max-height: 26px; display: block; }
-@media (max-width: 560px) { img.custom-logo { height: 22px !important; max-height: 22px; } }
+.custom-logo-link { display: inline-flex; align-items: center; line-height: 0; }
+img.custom-logo { height: 42px !important; width: auto; max-height: 42px; display: block; }
+@media (max-width: 560px) { img.custom-logo { height: 34px !important; max-height: 34px; } .header-top-inner { height: 58px; } }
 
-.primary-nav { display: flex; min-width: 0; }
-.primary-nav > ul { list-style: none; display: flex; align-items: center; gap: 2px; margin: 0; padding: 0; flex-wrap: nowrap; }
-.primary-nav a { display: block; color: #fff; font-family: var(--f-display); font-weight: 700; font-size: 15.5px; letter-spacing: -.01em; padding: 8px 11px; border-radius: 8px; white-space: nowrap; transition: background .15s, color .15s; }
+.header-bottom { background: var(--navy); border-top: 1px solid rgba(255,255,255,.08); }
+.primary-nav { display: flex; justify-content: center; min-width: 0; }
+.primary-nav > ul { list-style: none; display: flex; align-items: center; justify-content: center; gap: 2px; margin: 0; padding: 0; flex-wrap: wrap; min-height: 48px; }
+.primary-nav a { display: block; color: #fff; font-family: var(--f-display); font-weight: 700; font-size: 16px; letter-spacing: -.01em; padding: 12px 15px; border-radius: 8px; white-space: nowrap; transition: background .15s, color .15s; }
 .primary-nav a:hover, .primary-nav .current-menu-item > a { background: rgba(255,255,255,.14); color: #fff; }
 
 .nav-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
@@ -177,7 +180,7 @@ img.custom-logo { height: 26px !important; width: auto; max-height: 26px; displa
 .article-figure figcaption { font-family: var(--f-label); font-size: 12px; color: var(--muted); padding: 8px 2px 0; text-transform: uppercase; letter-spacing: .03em; }
 .article-content { font-size: 19px; line-height: 1.8; }
 .article-content > * + * { margin-top: 1.15em; }
-.article-content h2 { font-family: var(--f-display); font-weight: 800; font-size: 30px; margin-top: 1.9em; scroll-margin-top: 84px; }
+.article-content h2 { font-family: var(--f-display); font-weight: 800; font-size: 30px; margin-top: 1.9em; scroll-margin-top: 130px; }
 .article-content h3 { font-family: var(--f-display); font-weight: 700; font-size: 23px; margin-top: 1.5em; }
 .article-content a { text-decoration: underline; text-decoration-color: var(--primary); text-underline-offset: 3px; }
 .article-content img { border-radius: 10px; }
@@ -219,7 +222,7 @@ img.custom-logo { height: 26px !important; width: auto; max-height: 26px; displa
 /* ============================================================ footer */
 .site-footer { border-top: 2px solid var(--primary); background: var(--bg-2); margin-top: 70px; }
 .footer-top { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 34px; padding: 48px 0 34px; }
-.footer-brand-img { height: 34px; width: auto; margin-bottom: 12px; }
+.footer-brand-img { height: 50px; width: auto; margin-bottom: 14px; }
 .footer-brand .name { font-family: var(--f-display); font-weight: 800; font-size: 24px; color: var(--ink); }
 .footer-brand .name b { color: var(--secondary); }
 .footer-brand p { font-weight: 400; font-size: 14px; color: var(--muted); max-width: 40ch; margin: 10px 0 16px; }
@@ -254,6 +257,6 @@ img.custom-logo { height: 26px !important; width: auto; max-height: 26px; displa
 
 /* ============================================================ responsive */
 @media (max-width: 1180px) { .card-grid { grid-template-columns: repeat(3, 1fr); } .card.-lead { grid-column: span 3; } .footer-top { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 1024px) { .primary-nav { display: none; } .nav-burger { display: grid; } }
+@media (max-width: 1024px) { .header-bottom { display: none; } .nav-burger { display: grid; } }
 @media (max-width: 860px) { .card-grid { grid-template-columns: repeat(2, 1fr); } .card.-lead { grid-column: span 2; } .search-cols { grid-template-columns: 1fr; gap: 30px; } .filters { width: 100%; margin-left: 0; } }
 @media (max-width: 560px) { body { font-size: 16px; } .card-grid { grid-template-columns: 1fr; } .card.-lead, .card.-lead .card-thumb { grid-column: span 1; } .feature-head h1, .feature-head h2 { font-size: 44px; } .footer-top { grid-template-columns: 1fr; gap: 26px; } }
