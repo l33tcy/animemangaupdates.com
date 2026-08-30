@@ -175,6 +175,40 @@ add_filter( 'wpseo_schema_article_type', function ( $type ) {
 } );
 
 /**
+ * Ensure single-post breadcrumbs include the (primary) category and its ancestors
+ * — e.g. Home › Manga › One Piece › Title. Feeds both the visual Yoast breadcrumb
+ * and the BreadcrumbList schema, so the site's hierarchy is consistent for SERP.
+ */
+add_filter( 'wpseo_breadcrumb_links', function ( $links ) {
+	if ( ! is_singular( 'post' ) ) {
+		return $links;
+	}
+	$cats = get_the_category();
+	if ( empty( $cats ) ) {
+		return $links;
+	}
+	$primary = (int) get_post_meta( get_the_ID(), '_yoast_wpseo_primary_category', true );
+	$term    = $cats[0];
+	foreach ( $cats as $c ) {
+		if ( $c->term_id === $primary ) { $term = $c; break; }
+	}
+	// Skip if Yoast already inserted a category crumb.
+	foreach ( $links as $l ) {
+		if ( ! empty( $l['term_id'] ) ) { return $links; }
+	}
+	$chain = array();
+	$t     = $term;
+	$guard = 0;
+	while ( $t && $guard < 6 ) {
+		array_unshift( $chain, array( 'term_id' => $t->term_id, 'text' => $t->name, 'url' => get_category_link( $t->term_id ) ) );
+		$t = $t->parent ? get_term( $t->parent, 'category' ) : null;
+		$guard++;
+	}
+	$last  = array_pop( $links );          // current post (title) crumb
+	return array_merge( $links, $chain, array( $last ) );
+} );
+
+/**
  * Auto Table of Contents: give every H2 an id and inject a jump-link TOC after
  * the intro paragraph. Improves scannability and earns SERP "jump to" links.
  */
