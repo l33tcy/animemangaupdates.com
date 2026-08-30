@@ -35,7 +35,7 @@ $amu_email = 'contact@animemangaupdates.com';
 		<div class="footer-top">
 			<div class="footer-brand">
 				<?php
-				$logo_id = get_theme_mod( 'custom_logo' );
+				$logo_id = get_theme_mod( 'amu_footer_logo' ) ?: get_theme_mod( 'custom_logo' );
 				if ( $logo_id ) {
 					echo wp_get_attachment_image( $logo_id, 'medium', false, array( 'class' => 'footer-brand-img', 'alt' => get_bloginfo( 'name' ) ) );
 				} else {
