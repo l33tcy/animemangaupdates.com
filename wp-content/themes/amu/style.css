@@ -3,7 +3,7 @@ Theme Name: AnimeMangaUpdates
 Theme URI: https://animemangaupdates.com
 Description: Modern anime and manga news magazine theme, using the brand red and blue palette with solid colours, a full width Featured grid, animated mobile menu, collapsible table of contents and a full screen search with live suggestions. Yoast and ACF ready.
 Author: l33tcy
-Version: 6.0.0
+Version: 6.1.0
 Requires at least: 6.0
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
@@ -71,15 +71,19 @@ img.custom-logo { height: 150px !important; width: auto; max-height: 150px; disp
 @media (max-width: 768px) { .header-top-inner { height: 118px; } img.custom-logo { height: 100px !important; max-height: 100px; } }
 @media (max-width: 480px) { .header-top-inner { height: 92px; } img.custom-logo { height: 74px !important; max-height: 74px; } }
 
-.header-bottom { background: var(--navy); border-top: 1px solid rgba(255,255,255,.08); }
-.header-bottom-inner { display: flex; align-items: center; gap: 16px; min-height: 56px; }
+.header-bottom { position: relative; background: linear-gradient(180deg, #0d1017, var(--navy)); border-top: 1px solid rgba(255,255,255,.06); }
+.header-bottom::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--primary), var(--secondary)); }
+.header-bottom-inner { display: flex; align-items: center; gap: 16px; min-height: 58px; }
 .primary-nav { display: flex; justify-content: center; min-width: 0; flex: 1 1 auto; }
-.nav-actions-bar { flex: 0 0 auto; }
+.nav-actions-bar { flex: 0 0 auto; position: relative; padding-left: 20px; }
+.nav-actions-bar::before { content: ""; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 1px; height: 26px; background: rgba(255,255,255,.14); }
 /* the switch sits on the dark navbar/drawer now — lift its border for contrast */
 .header-bottom .theme-switch, .drawer-actions .theme-switch { border-color: rgba(255,255,255,.28); }
-.primary-nav > ul { list-style: none; display: flex; align-items: center; justify-content: center; gap: 2px; margin: 0; padding: 0; flex-wrap: wrap; min-height: 48px; }
-.primary-nav a { display: block; color: #fff; font-family: var(--f-display); font-weight: 700; font-size: 16px; letter-spacing: -.01em; padding: 12px 15px; border-radius: 8px; white-space: nowrap; transition: background .15s, color .15s; }
-.primary-nav a:hover, .primary-nav .current-menu-item > a { background: rgba(255,255,255,.14); color: #fff; }
+.primary-nav > ul { list-style: none; display: flex; align-items: center; justify-content: center; gap: 2px; margin: 0; padding: 0; flex-wrap: wrap; }
+.primary-nav a { position: relative; display: block; color: rgba(255,255,255,.85); font-family: var(--f-display); font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: .06em; padding: 19px 16px; white-space: nowrap; transition: color .18s; }
+.primary-nav a::after { content: ""; position: absolute; left: 16px; right: 16px; bottom: 12px; height: 2px; border-radius: 2px; background: var(--primary); transform: scaleX(0); transform-origin: left; transition: transform .22s cubic-bezier(.16,.84,.28,1); }
+.primary-nav a:hover, .primary-nav .current-menu-item > a { color: #fff; }
+.primary-nav a:hover::after, .primary-nav .current-menu-item > a::after { transform: scaleX(1); }
 
 .nav-actions { grid-column: 3; justify-self: end; display: flex; align-items: center; gap: 10px; }
 .icon-btn { display: grid; place-items: center; width: 40px; height: 40px; border: 1.5px solid rgba(255,255,255,.35); border-radius: 10px; background: transparent; color: #fff; transition: background .15s, border-color .15s; }
@@ -325,3 +329,49 @@ img.custom-logo { height: 150px !important; width: auto; max-height: 150px; disp
 .reveal-email { display: inline-flex; align-items: center; gap: 8px; background: var(--primary); color: #fff; border: 0; border-radius: 9px; font-family: var(--f-display); font-weight: 800; font-size: 15px; padding: 11px 20px; cursor: pointer; }
 .reveal-email:hover { background: var(--primary-2); }
 a.reveal-email.revealed { background: transparent; color: var(--primary); padding: 0; text-decoration: underline; }
+
+/* ============================================================ mobile drawer logo */
+.drawer-brand { display: inline-flex; align-items: center; }
+.drawer-logo { height: 42px; width: auto; display: block; }
+
+/* ============================================================ homepage: category pills */
+.cat-pills { display: flex; gap: 10px; overflow-x: auto; padding: 4px 0 16px; margin-bottom: 6px; scrollbar-width: none; }
+.cat-pills::-webkit-scrollbar { display: none; }
+.cat-pills a { flex: none; display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 999px; border: 1.5px solid var(--line); color: var(--ink); font-family: var(--f-label); font-weight: 700; font-size: 12.5px; letter-spacing: .04em; text-transform: uppercase; transition: .15s; }
+.cat-pills a:hover { border-color: var(--pill, var(--primary)); color: var(--pill, var(--primary)); }
+
+/* ============================================================ homepage: hero */
+.hero { display: grid; grid-template-columns: 1.7fr 1fr; gap: 26px; margin: 6px 0 22px; }
+.hero-lead { position: relative; display: flex; min-height: 440px; border-radius: var(--radius); overflow: hidden; background: var(--panel-2); box-shadow: var(--shadow); }
+.hero-thumb { position: absolute; inset: 0; display: block; }
+.hero-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+.hero-lead:hover .hero-thumb img { transform: scale(1.04); }
+.hero-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(6,8,14,0) 28%, rgba(6,8,14,.55) 60%, rgba(6,8,14,.95) 100%); }
+.hero-body { position: relative; z-index: 1; margin-top: auto; padding: 28px; width: 100%; }
+.hero-title { font-family: var(--f-display); font-weight: 800; font-size: clamp(26px, 3.4vw, 46px); line-height: 1.04; letter-spacing: -.025em; margin: 12px 0 10px; }
+.hero-title a { color: #fff; } .hero-title a:hover { color: #fff; text-decoration: underline; text-decoration-color: var(--primary); text-underline-offset: 3px; }
+.hero-excerpt { color: rgba(255,255,255,.82); font-size: 15px; line-height: 1.55; max-width: 60ch; margin: 0 0 14px; }
+.hero-body .card-meta { color: rgba(255,255,255,.72); }
+.hero-side { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.hero-side-head { font-family: var(--f-label); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0 0 2px; padding-bottom: 10px; border-bottom: 2px solid var(--line); }
+.hero-item { display: grid; grid-template-columns: 112px 1fr; gap: 14px; align-items: center; min-width: 0; }
+.hero-item-thumb { display: block; border-radius: 10px; overflow: hidden; aspect-ratio: 4/3; background: var(--panel-2); }
+.hero-item-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+.hero-item:hover .hero-item-thumb img { transform: scale(1.05); }
+.hero-item-thumb .ph { display: block; width: 100%; height: 100%; }
+.hero-item-body { min-width: 0; }
+.hero-item-title { font-family: var(--f-display); font-weight: 800; font-size: 16.5px; line-height: 1.18; letter-spacing: -.01em; margin: 7px 0 6px; }
+.hero-item-title a { color: var(--ink); } .hero-item-title a:hover { color: var(--primary); }
+.hero-item .tag-cat { padding: 3px 9px; font-size: 10.5px; }
+@media (max-width: 980px) { .hero { grid-template-columns: 1fr; } .hero-lead { min-height: 360px; } }
+@media (max-width: 560px) { .hero-lead { min-height: 300px; } .hero-body { padding: 20px; } .hero-item { grid-template-columns: 96px 1fr; } }
+
+/* ============================================================ continuous reading (infinite posts) */
+.next-post-sep { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 52px 0 30px; padding-top: 30px; border-top: 2px solid var(--line); }
+.next-post-sep .nps-label { flex: none; font-family: var(--f-label); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #fff; background: var(--primary); padding: 5px 12px; border-radius: 999px; }
+.next-post-sep .nps-title { font-family: var(--f-display); font-weight: 800; font-size: clamp(18px, 2.4vw, 26px); letter-spacing: -.02em; color: var(--ink); line-height: 1.15; }
+.infinite-status { display: none; align-items: center; justify-content: center; gap: 10px; padding: 26px 0; color: var(--muted); font-family: var(--f-label); font-size: 13px; letter-spacing: .05em; text-transform: uppercase; }
+.infinite-status.show { display: flex; }
+.spinner { width: 18px; height: 18px; border: 2.5px solid var(--line); border-top-color: var(--primary); border-radius: 50%; animation: amuspin .7s linear infinite; }
+@keyframes amuspin { to { transform: rotate(360deg); } }
+.infinite-sentinel { height: 1px; }

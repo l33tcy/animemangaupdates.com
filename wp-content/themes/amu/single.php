@@ -8,12 +8,12 @@
 get_header();
 ?>
 <div class="wrap">
-	<div class="single-wrap">
+	<div class="single-wrap" id="amuPosts">
 		<?php
 		while ( have_posts() ) :
 			the_post();
 			?>
-			<article <?php post_class(); ?>>
+			<article <?php post_class( 'js-post' ); ?> data-url="<?php the_permalink(); ?>" data-title="<?php echo esc_attr( get_the_title() ); ?>" data-next="<?php echo esc_url( amu_next_post_url() ); ?>">
 				<header class="article-header">
 					<?php if ( function_exists( 'yoast_breadcrumb' ) ) { yoast_breadcrumb( '<nav class="breadcrumbs" aria-label="Breadcrumb">', '</nav>' ); } ?>
 					<?php amu_cat_tag(); ?>
@@ -54,6 +54,8 @@ get_header();
 			}
 		endwhile;
 		?>
+		<div class="infinite-status" id="amuMoreStatus" aria-live="polite"><span class="spinner" aria-hidden="true"></span><span class="txt"><?php esc_html_e( 'Loading next article…', 'amu' ); ?></span></div>
+		<div class="infinite-sentinel" id="amuMore" aria-hidden="true"></div>
 	</div>
 </div>
 <?php

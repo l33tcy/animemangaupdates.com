@@ -68,7 +68,15 @@ if ( ! function_exists( 'amu_menu_fallback' ) ) {
 <div class="mobile-drawer" id="amuDrawer" aria-hidden="true">
 	<div class="wrap" style="width:100%">
 		<div class="drawer-head">
-			<a class="brand" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php echo wp_kses_post( str_ireplace( 'Manga', '<b>Manga</b>', esc_html( get_bloginfo( 'name' ) ) ) ); ?></a>
+			<a class="brand drawer-brand" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
+				<?php
+				if ( has_custom_logo() ) {
+					echo wp_get_attachment_image( get_theme_mod( 'custom_logo' ), 'medium', false, array( 'class' => 'drawer-logo', 'alt' => get_bloginfo( 'name' ) ) );
+				} else {
+					echo wp_kses_post( str_ireplace( 'Manga', '<b>Manga</b>', esc_html( get_bloginfo( 'name' ) ) ) );
+				}
+				?>
+			</a>
 			<button class="drawer-close js-drawer-close" aria-label="<?php esc_attr_e( 'Close menu', 'amu' ); ?>">&times;</button>
 		</div>
 		<nav aria-label="<?php esc_attr_e( 'Mobile', 'amu' ); ?>"><?php wp_nav_menu( $amu_menu_args ); ?></nav>

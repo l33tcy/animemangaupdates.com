@@ -240,6 +240,23 @@ function amu_nav_controls() {
 	<?php
 }
 
+/** Next post URL for continuous reading (older adjacent post, else latest other post). */
+function amu_next_post_url() {
+	$prev = get_previous_post();
+	if ( $prev instanceof WP_Post ) {
+		return get_permalink( $prev );
+	}
+	$ids = get_posts( array(
+		'numberposts'  => 1,
+		'post__not_in' => array( get_the_ID() ),
+		'orderby'      => 'date',
+		'order'        => 'DESC',
+		'fields'       => 'ids',
+		'no_found_rows' => true,
+	) );
+	return $ids ? get_permalink( $ids[0] ) : '';
+}
+
 /** Google News follow callout (shown on single posts only). */
 function amu_gnews_callout() {
 	?>
@@ -613,3 +630,44 @@ add_action( 'template_redirect', function () {
 		exit;
 	}
 } );
+
+/**
+ * Root-level flat URLs mean a tag/category slug can collide with a POST slug
+ * (e.g. tag "one-piece-chapter-1192" vs the post of the same slug). Posts must
+ * win: if the requested term slug matches a published post, serve the post.
+ */
+add_filter( 'request', function ( $qv ) {
+	$slug = '';
+	if ( ! empty( $qv['tag'] ) ) {
+		$slug = $qv['tag'];
+	} elseif ( ! empty( $qv['category_name'] ) && false === strpos( $qv['category_name'], '/' ) ) {
+		$slug = $qv['category_name'];
+	}
+	if ( '' !== $slug ) {
+		$post = get_page_by_path( $slug, OBJECT, 'post' );
+		if ( $post && 'publish' === $post->post_status ) {
+			return array( 'name' => $slug, 'page' => '' );
+		}
+	}
+	return $qv;
+} );
+
+/* -------------------------------------------------------------- Google News (Subscribe with Google) */
+add_action( 'wp_head', function () {
+	if ( ! is_singular( 'post' ) ) {
+		return;
+	}
+	?>
+<script async type="application/javascript" src="https://news.google.com/swg/js/v1/swg-basic.js"></script>
+<script>
+  (self.SWG_BASIC = self.SWG_BASIC || []).push( basicSubscriptions => {
+    basicSubscriptions.init({
+      type: "NewsArticle",
+      isPartOfType: ["Product"],
+      isPartOfProductId: "CAow3ZTNDA:openaccess",
+      clientOptions: { theme: "light", lang: "en" },
+    });
+  });
+</script>
+	<?php
+}, 20 );

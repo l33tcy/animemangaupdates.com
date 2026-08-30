@@ -119,6 +119,72 @@
   }
 })();
 
+/* continuous reading: append the next post when the reader nears the end */
+(function () {
+  var container = document.getElementById('amuPosts');
+  var sentinel = document.getElementById('amuMore');
+  var status = document.getElementById('amuMoreStatus');
+  if (!container || !sentinel) return;
+  var loading = false, done = false, seen = {};
+  var first = container.querySelector('.js-post');
+  if (first && first.getAttribute('data-url')) seen[first.getAttribute('data-url')] = 1;
+
+  function nextUrl() {
+    var posts = container.querySelectorAll('.js-post');
+    var last = posts[posts.length - 1];
+    return last ? (last.getAttribute('data-next') || '') : '';
+  }
+  function setStatus(on) { if (status) status.classList.toggle('show', !!on); }
+
+  function loadNext() {
+    if (loading || done) return;
+    var url = nextUrl();
+    if (!url || seen[url]) { done = true; setStatus(false); return; }
+    loading = true; setStatus(true); seen[url] = 1;
+    fetch(url, { credentials: 'same-origin' })
+      .then(function (r) { return r.ok ? r.text() : Promise.reject(); })
+      .then(function (html) {
+        var d = new DOMParser().parseFromString(html, 'text/html');
+        var art = d.querySelector('#amuPosts .js-post') || d.querySelector('.js-post');
+        if (!art) { done = true; setStatus(false); return; }
+        var sep = document.createElement('div');
+        sep.className = 'next-post-sep';
+        var l = document.createElement('span'); l.className = 'nps-label'; l.textContent = 'Up next';
+        var t = document.createElement('span'); t.className = 'nps-title'; t.textContent = art.getAttribute('data-title') || d.title || '';
+        sep.appendChild(l); sep.appendChild(t);
+        container.insertBefore(sep, sentinel);
+        var node = document.importNode(art, true);
+        container.insertBefore(node, sentinel);
+        watchArticle(node);
+        loading = false; setStatus(false);
+      })
+      .catch(function () { loading = false; done = true; setStatus(false); });
+  }
+
+  // update the address bar + title as each appended article reaches the top
+  function watchArticle(article) {
+    if (!('IntersectionObserver' in window)) return;
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var u = article.getAttribute('data-url'), ti = article.getAttribute('data-title');
+        if (u && location.pathname !== new URL(u, location.href).pathname) {
+          history.replaceState(null, '', u);
+          if (ti) document.title = ti;
+        }
+      });
+    }, { rootMargin: '-10% 0px -85% 0px', threshold: 0 }).observe(article);
+  }
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (e) { if (e[0].isIntersecting) loadNext(); }, { rootMargin: '700px 0px' }).observe(sentinel);
+  } else {
+    window.addEventListener('scroll', function () {
+      if (sentinel.getBoundingClientRect().top < window.innerHeight + 700) loadNext();
+    }, { passive: true });
+  }
+})();
+
 /* email reveal (anti-spam): assemble address on click */
 (function () {
   Array.prototype.forEach.call(document.querySelectorAll('.js-reveal-email'), function (btn) {
