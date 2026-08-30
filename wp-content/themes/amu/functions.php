@@ -171,6 +171,16 @@ function amu_gnews_url() {
 	return apply_filters( 'amu_gnews_url', $default );
 }
 
+/** Google News logo mark for the Follow CTA (nominative use to link to the service). */
+function amu_gnews_icon() {
+	return '<svg class="gn-logo" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.6" fill="#fff"/><rect x="3" y="4" width="18" height="4.4" rx="2.6" fill="#4285F4"/><rect x="3" y="6" width="18" height="2.4" fill="#4285F4"/><rect x="5.4" y="10.6" width="6" height="1.8" rx=".9" fill="#EA4335"/><rect x="5.4" y="13.8" width="6" height="1.8" rx=".9" fill="#34A853"/><rect x="13" y="10.6" width="5.6" height="5" rx="1" fill="#FBBC05"/></svg>';
+}
+
+/** [amu_email] renders a "Show email" button that reveals the address via JS (anti-spam). */
+add_shortcode( 'amu_email', function () {
+	return '<button type="button" class="reveal-email js-reveal-email" data-u="contact" data-d="animemangaupdates.com">' . esc_html__( 'Show email', 'amu' ) . '</button>';
+} );
+
 /* -------------------------------------------------------------- SEO structure */
 
 /** Tell Yoast to mark single posts as NewsArticle (news intent for SERP). */

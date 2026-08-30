@@ -57,10 +57,7 @@ if ( ! function_exists( 'amu_menu_fallback' ) ) {
 				<button class="icon-btn nav-burger js-drawer-open" aria-label="<?php esc_attr_e( 'Menu', 'amu' ); ?>">
 					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
 				</button>
-				<a class="btn-gnews" href="<?php echo esc_url( amu_gnews_url() ); ?>" target="_blank" rel="noopener">
-					<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path class="g" d="M3 5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5z" opacity=".18"/><path d="M6 8h7M6 11h9M6 14h6M6 17h9" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
-					<span class="label"><?php esc_html_e( 'Follow on Google News', 'amu' ); ?></span>
-				</a>
+				<a class="btn-gnews" href="<?php echo esc_url( amu_gnews_url() ); ?>" target="_blank" rel="noopener"><?php echo amu_gnews_icon(); // phpcs:ignore ?><span class="label"><?php esc_html_e( 'Follow on Google News', 'amu' ); ?></span></a>
 			</div>
 		</div>
 	</div>

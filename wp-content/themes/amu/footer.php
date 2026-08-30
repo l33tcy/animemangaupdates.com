@@ -26,10 +26,7 @@ $amu_email = 'contact@animemangaupdates.com';
 
 		<div class="gnews-callout">
 			<span class="gn-txt"><?php esc_html_e( 'Stay ahead of every release, follow us on Google News and add us as a favorite.', 'amu' ); ?></span>
-			<a class="btn-gnews" href="<?php echo esc_url( amu_gnews_url() ); ?>" target="_blank" rel="noopener">
-				<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 8h7M6 11h9M6 14h6M6 17h9" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
-				<span class="label"><?php esc_html_e( 'Follow on Google News', 'amu' ); ?></span>
-			</a>
+			<a class="btn-gnews" href="<?php echo esc_url( amu_gnews_url() ); ?>" target="_blank" rel="noopener"><?php echo amu_gnews_icon(); // phpcs:ignore ?><span class="label"><?php esc_html_e( 'Follow on Google News', 'amu' ); ?></span></a>
 		</div>
 
 		<div class="footer-top">
@@ -73,7 +70,6 @@ $amu_email = 'contact@animemangaupdates.com';
 
 		<div class="footer-bottom">
 			<span>&copy; <?php echo esc_html( date_i18n( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?>. <?php esc_html_e( 'All rights reserved.', 'amu' ); ?></span>
-			<span><a href="mailto:<?php echo esc_attr( $amu_email ); ?>"><?php echo esc_html( $amu_email ); ?></a></span>
 		</div>
 	</div>
 </footer>

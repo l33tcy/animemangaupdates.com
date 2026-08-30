@@ -3,7 +3,7 @@ Theme Name: AnimeMangaUpdates
 Theme URI: https://animemangaupdates.com
 Description: Modern anime and manga news magazine theme, using the brand red and blue palette with solid colours, a full width Featured grid, animated mobile menu, collapsible table of contents and a full screen search with live suggestions. Yoast and ACF ready.
 Author: l33tcy
-Version: 5.4.0
+Version: 5.5.0
 Requires at least: 6.0
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
@@ -275,3 +275,12 @@ img.custom-logo { height: 150px !important; width: auto; max-height: 150px; disp
 @media (max-width: 1024px) { .header-bottom { display: none; } .nav-burger { display: grid; } }
 @media (max-width: 860px) { .card-grid { grid-template-columns: repeat(2, 1fr); } .card.-lead { grid-column: span 2; } .search-cols { grid-template-columns: 1fr; gap: 30px; } .filters { width: 100%; margin-left: 0; } }
 @media (max-width: 560px) { body { font-size: 16px; } .card-grid { grid-template-columns: 1fr; } .card.-lead, .card.-lead .card-thumb { grid-column: span 1; } .feature-head h1, .feature-head h2 { font-size: 44px; } .footer-top { grid-template-columns: 1fr; gap: 26px; } }
+
+/* Google News CTA (white card per redesign) + email reveal button */
+.gnews-callout { background: #ffffff; border-color: var(--primary); color: #0c0f17; }
+.gnews-callout .gn-txt { color: #0c0f17; font-weight: 800; }
+.btn-gnews { gap: 9px; }
+.btn-gnews .gn-logo { border-radius: 3px; flex: none; }
+.reveal-email { display: inline-flex; align-items: center; gap: 8px; background: var(--primary); color: #fff; border: 0; border-radius: 9px; font-family: var(--f-display); font-weight: 800; font-size: 15px; padding: 11px 20px; cursor: pointer; }
+.reveal-email:hover { background: var(--primary-2); }
+a.reveal-email.revealed { background: transparent; color: var(--primary); padding: 0; text-decoration: underline; }

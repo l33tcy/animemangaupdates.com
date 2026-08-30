@@ -119,3 +119,15 @@
     });
   }
 })();
+
+/* email reveal (anti-spam): assemble address on click */
+(function () {
+  Array.prototype.forEach.call(document.querySelectorAll('.js-reveal-email'), function (btn) {
+    btn.addEventListener('click', function () {
+      var addr = (btn.getAttribute('data-u') || '') + '@' + (btn.getAttribute('data-d') || '');
+      var a = document.createElement('a');
+      a.href = 'mailto:' + addr; a.textContent = addr; a.className = 'reveal-email revealed';
+      btn.parentNode.replaceChild(a, btn);
+    });
+  });
+})();
