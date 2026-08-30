@@ -3,7 +3,7 @@ Theme Name: AnimeMangaUpdates
 Theme URI: https://animemangaupdates.com
 Description: Modern anime and manga news magazine theme, using the brand red and blue palette with solid colours, a full width Featured grid, animated mobile menu, collapsible table of contents and a full screen search with live suggestions. Yoast and ACF ready.
 Author: l33tcy
-Version: 5.1.0
+Version: 5.2.0
 Requires at least: 6.0
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
@@ -67,9 +67,9 @@ button { font-family: inherit; cursor: pointer; }
 .brand b { color: var(--secondary); }
 .header-top-inner .custom-logo-link, .header-top-inner > .brand { grid-column: 2; justify-self: center; }
 .custom-logo-link { display: inline-flex; align-items: center; line-height: 0; }
-img.custom-logo { height: 54px !important; width: auto; max-height: 54px; display: block; }
-@media (max-width: 768px) { .header-top-inner { height: 68px; } img.custom-logo { height: 42px !important; max-height: 42px; } }
-@media (max-width: 480px) { img.custom-logo { height: 34px !important; max-height: 34px; } }
+img.custom-logo { height: 76px !important; width: auto; max-height: 76px; display: block; }
+@media (max-width: 768px) { .header-top-inner { height: 78px; } img.custom-logo { height: 54px !important; max-height: 54px; } }
+@media (max-width: 480px) { img.custom-logo { height: 44px !important; max-height: 44px; } }
 
 .header-bottom { background: var(--navy); border-top: 1px solid rgba(255,255,255,.08); }
 .primary-nav { display: flex; justify-content: center; min-width: 0; }
