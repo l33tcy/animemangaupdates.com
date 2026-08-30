@@ -12,11 +12,6 @@ get_header();
 		<?php
 		while ( have_posts() ) :
 			the_post();
-			$series   = amu_field( 'amu_series' );
-			$status   = amu_field( 'amu_status' );
-			$episodes = amu_field( 'amu_episodes' );
-			$score    = amu_field( 'amu_score' );
-			$has_spec = $series || $status || $episodes || $score;
 			?>
 			<article <?php post_class(); ?>>
 				<header class="article-header">
@@ -27,23 +22,11 @@ get_header();
 						<span><?php echo esc_html( get_the_author() ); ?></span>
 						<span><?php echo esc_html( get_the_date() ); ?></span>
 						<span><?php echo esc_html( amu_reading_time() ); ?> min read</span>
-						<?php if ( $score ) : ?><span>★ <?php echo esc_html( number_format( (float) $score, 1 ) ); ?></span><?php endif; ?>
 					</div>
 				</header>
 
 				<?php if ( has_post_thumbnail() ) : ?>
 					<figure class="article-figure"><?php the_post_thumbnail( 'amu_hero' ); ?></figure>
-				<?php endif; ?>
-
-				<?php if ( $has_spec ) : ?>
-					<div class="spec-box">
-						<dl>
-							<?php if ( $series ) : ?><div><dt><?php esc_html_e( 'Series', 'amu' ); ?></dt><dd><?php echo esc_html( $series ); ?></dd></div><?php endif; ?>
-							<?php if ( $status ) : ?><div><dt><?php esc_html_e( 'Status', 'amu' ); ?></dt><dd><?php echo esc_html( $status ); ?></dd></div><?php endif; ?>
-							<?php if ( $episodes ) : ?><div><dt><?php esc_html_e( 'Episodes / Ch.', 'amu' ); ?></dt><dd><?php echo esc_html( $episodes ); ?></dd></div><?php endif; ?>
-							<?php if ( $score ) : ?><div><dt><?php esc_html_e( 'Score', 'amu' ); ?></dt><dd>★ <?php echo esc_html( number_format( (float) $score, 1 ) ); ?></dd></div><?php endif; ?>
-						</dl>
-					</div>
 				<?php endif; ?>
 
 				<div class="article-content">
