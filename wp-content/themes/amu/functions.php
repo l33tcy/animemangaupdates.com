@@ -86,3 +86,33 @@ function amu_excerpt_length() {
 	return 22;
 }
 add_filter( 'excerpt_length', 'amu_excerpt_length' );
+
+/*
+ * Origin-hiding hardening.
+ *
+ * The site sits behind Cloudflare with the origin firewalled to CF IPs. The
+ * remaining way to unmask the real IP is to make WordPress itself phone out to
+ * an attacker — the classic XML-RPC `pingback.ping` SSRF. Shut those vectors:
+ * disable XML-RPC, strip the pingback method + advertising headers/links, and
+ * block outgoing self/other pingbacks.
+ */
+add_filter( 'xmlrpc_enabled', '__return_false' );
+
+add_filter( 'wp_headers', function ( $headers ) {
+	unset( $headers['X-Pingback'] );
+	return $headers;
+} );
+
+add_filter( 'xmlrpc_methods', function ( $methods ) {
+	unset( $methods['pingback.ping'], $methods['pingback.extensions.getPingbacks'] );
+	return $methods;
+} );
+
+// Remove endpoint-discovery links (RSD / Windows Live Writer) from <head>.
+remove_action( 'wp_head', 'rsd_link' );
+remove_action( 'wp_head', 'wlwmanifest_link' );
+
+// Never emit outbound pingbacks (they'd reveal the origin IP to the pinged host).
+add_action( 'pre_ping', function ( &$links ) {
+	$links = array();
+} );
