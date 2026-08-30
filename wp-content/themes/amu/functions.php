@@ -167,6 +167,42 @@ function amu_subscribe_url() {
 	return apply_filters( 'amu_subscribe_url', get_feed_link() );
 }
 
+/* -------------------------------------------------------------- SEO structure */
+
+/** Tell Yoast to mark single posts as NewsArticle (news intent for SERP). */
+add_filter( 'wpseo_schema_article_type', function ( $type ) {
+	return is_singular( 'post' ) ? 'NewsArticle' : $type;
+} );
+
+/**
+ * Auto Table of Contents: give every H2 an id and inject a jump-link TOC after
+ * the intro paragraph. Improves scannability and earns SERP "jump to" links.
+ */
+function amu_add_toc( $content ) {
+	if ( ! is_singular( 'post' ) || ! in_the_loop() || ! is_main_query() ) {
+		return $content;
+	}
+	if ( ! preg_match_all( '/<h2([^>]*)>(.*?)<\/h2>/is', $content, $m, PREG_SET_ORDER ) || count( $m ) < 2 ) {
+		return $content;
+	}
+	$items = '';
+	$used  = array();
+	foreach ( $m as $h ) {
+		$text = trim( wp_strip_all_tags( $h[2] ) );
+		if ( '' === $text ) { continue; }
+		$slug = sanitize_title( $text );
+		if ( isset( $used[ $slug ] ) ) { $used[ $slug ]++; $slug .= '-' . $used[ $slug ]; } else { $used[ $slug ] = 1; }
+		if ( false === strpos( $h[1], 'id=' ) ) {
+			$content = str_replace( $h[0], '<h2' . $h[1] . ' id="' . esc_attr( $slug ) . '">' . $h[2] . '</h2>', $content );
+		}
+		$items .= '<li><a href="#' . esc_attr( $slug ) . '">' . esc_html( $text ) . '</a></li>';
+	}
+	$toc = '<nav class="toc" aria-label="' . esc_attr__( 'Table of contents', 'amu' ) . '"><p class="toc-title">' . esc_html__( 'Table of contents', 'amu' ) . '</p><ol>' . $items . '</ol></nav>';
+	$pos = stripos( $content, '</p>' );
+	return false !== $pos ? substr( $content, 0, $pos + 4 ) . $toc . substr( $content, $pos + 4 ) : $toc . $content;
+}
+add_filter( 'the_content', 'amu_add_toc', 9 );
+
 function amu_excerpt_length() { return 18; }
 add_filter( 'excerpt_length', 'amu_excerpt_length' );
 function amu_excerpt_more() { return '…'; }
