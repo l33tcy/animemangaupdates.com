@@ -1,6 +1,6 @@
 <?php
 /**
- * Header template.
+ * Header.
  *
  * @package amu
  */
@@ -23,9 +23,9 @@
 			if ( has_custom_logo() ) {
 				the_custom_logo();
 			} else {
-				$name = get_bloginfo( 'name' );
-				// Highlight the "Updates" part if present, else the whole name.
-				echo wp_kses_post( str_ireplace( 'Updates', '<span>Updates</span>', esc_html( $name ) ) );
+				// Wordmark: highlight "Manga" in ink-red, add a NEWS chip.
+				echo wp_kses_post( str_ireplace( 'Manga', '<b>Manga</b>', esc_html( get_bloginfo( 'name' ) ) ) );
+				echo '<span class="tag">News</span>';
 			}
 			?>
 		</a>
@@ -35,9 +35,11 @@
 		<nav class="main-nav" aria-label="<?php esc_attr_e( 'Primary', 'amu' ); ?>">
 			<?php
 			if ( has_nav_menu( 'primary' ) ) {
-				wp_nav_menu( array( 'theme_location' => 'primary', 'container' => false ) );
+				wp_nav_menu( array( 'theme_location' => 'primary', 'container' => false, 'depth' => 1 ) );
 			} else {
-				amu_default_menu();
+				echo '<ul>';
+				wp_list_categories( array( 'title_li' => '', 'number' => 6, 'orderby' => 'count', 'order' => 'DESC' ) );
+				echo '</ul>';
 			}
 			?>
 		</nav>
@@ -45,4 +47,3 @@
 </header>
 
 <main id="main" class="site-main">
-	<div class="wrap">
