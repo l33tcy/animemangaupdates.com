@@ -273,9 +273,18 @@ add_filter( 'rest_endpoints', function ( $endpoints ) {
 	return $endpoints;
 } );
 
-// Block author enumeration via ?author=N and /author/ archives.
+// Block author enumeration via ?author=N and /author/ archives. Runs at priority
+// 0 so it fires BEFORE redirect_canonical, which would otherwise 301 ?author=1 to
+// /author/<login>/ and leak the username.
 add_action( 'template_redirect', function () {
 	if ( is_author() || ( isset( $_GET['author'] ) && ! is_admin() && ! is_user_logged_in() ) ) {
+		wp_safe_redirect( home_url( '/' ), 301 );
+		exit;
+	}
+}, 0 );
+// Also strip the author query var early, as a belt-and-suspenders guard.
+add_action( 'parse_request', function ( $wp ) {
+	if ( ! is_admin() && ! empty( $wp->query_vars['author'] ) && ! is_user_logged_in() ) {
 		wp_safe_redirect( home_url( '/' ), 301 );
 		exit;
 	}
