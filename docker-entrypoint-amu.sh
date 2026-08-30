@@ -6,6 +6,14 @@ set -euo pipefail
 WPC=/var/www/html/wp-content
 mkdir -p "$WPC/themes/amu" "$WPC/plugins"
 
+# CORE — the wordpress image declares VOLUME /var/www/html, so Docker keeps an
+# anonymous volume that pins an OLD core across deploys (the stock entrypoint
+# only copies missing files, never upgrades). Force the docroot core to match the
+# image on every start, excluding the wp-content data volume.
+if [ -d /usr/src/wordpress ]; then
+  ( cd /usr/src/wordpress && tar --exclude='./wp-content' -cf - . ) | ( cd /var/www/html && tar -xf - )
+fi
+
 # THEME — always refreshed from the image (git is the source of truth).
 cp -a /opt/amu-theme/amu/. "$WPC/themes/amu/"
 
