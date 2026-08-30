@@ -1,0 +1,135 @@
+/*
+Theme Name: AnimeMangaUpdates
+Theme URI: https://animemangaupdates.com
+Description: Dark, fast news theme for anime & manga. Classic WordPress theme built for animemangaupdates.com.
+Author: l33tcy
+Version: 1.0.0
+Requires at least: 6.0
+Requires PHP: 8.1
+License: GNU General Public License v2 or later
+Text Domain: amu
+*/
+
+:root {
+  --bg: #0d0e12;
+  --surface: #16181f;
+  --surface-2: #1e212b;
+  --border: #282b36;
+  --text: #e7e9ee;
+  --muted: #9aa0ad;
+  --accent: #ff3d7f;
+  --accent-2: #7c5cff;
+  --radius: 12px;
+  --wrap: 1140px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+img { max-width: 100%; height: auto; display: block; }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 20px; }
+.skip-link { position: absolute; left: -9999px; }
+.skip-link:focus { left: 8px; top: 8px; background: var(--accent); color: #fff; padding: 8px 12px; border-radius: 8px; z-index: 100; }
+
+/* Header */
+.site-header {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(13,14,18,.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.header-inner { display: flex; align-items: center; gap: 20px; height: 64px; }
+.site-brand { font-weight: 800; font-size: 20px; letter-spacing: -.3px; color: var(--text); white-space: nowrap; }
+.site-brand span { color: var(--accent); }
+.main-nav { margin-left: auto; }
+.main-nav ul { list-style: none; display: flex; gap: 22px; margin: 0; padding: 0; }
+.main-nav a { color: var(--muted); font-weight: 600; font-size: 15px; }
+.main-nav a:hover { color: var(--text); text-decoration: none; }
+.nav-toggle { display: none; background: none; border: 0; color: var(--text); font-size: 24px; cursor: pointer; margin-left: auto; }
+
+/* Layout */
+.site-main { padding: 32px 0 48px; }
+.layout { display: grid; grid-template-columns: 1fr 320px; gap: 40px; }
+.section-title { font-size: 15px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin: 0 0 18px; border-left: 3px solid var(--accent); padding-left: 10px; }
+
+/* Post grid + cards */
+.post-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform .15s ease, border-color .15s ease;
+}
+.card:hover { transform: translateY(-3px); border-color: var(--accent); }
+.card-thumb { display: block; aspect-ratio: 16/9; background: var(--surface-2); overflow: hidden; }
+.card-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.card-body { padding: 14px 16px 18px; }
+.card-cat { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--accent-2); }
+.card-title { font-size: 18px; line-height: 1.35; margin: 6px 0 8px; }
+.card-title a { color: var(--text); }
+.card-title a:hover { color: var(--accent); text-decoration: none; }
+.card-meta { font-size: 13px; color: var(--muted); }
+.card-excerpt { color: var(--muted); font-size: 14px; margin-top: 8px; }
+
+/* Single article */
+.article-header { margin-bottom: 24px; }
+.article-cat { color: var(--accent-2); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; font-size: 13px; }
+.article-title { font-size: clamp(28px, 4vw, 40px); line-height: 1.15; margin: 10px 0 12px; letter-spacing: -.5px; }
+.article-meta { color: var(--muted); font-size: 14px; display: flex; gap: 14px; flex-wrap: wrap; }
+.article-hero { border-radius: var(--radius); overflow: hidden; margin: 24px 0; border: 1px solid var(--border); }
+.article-content { font-size: 17px; }
+.article-content h2 { font-size: 26px; margin-top: 36px; }
+.article-content h3 { font-size: 21px; margin-top: 28px; }
+.article-content img { border-radius: 10px; margin: 20px 0; }
+.article-content blockquote { border-left: 3px solid var(--accent); margin: 24px 0; padding: 4px 18px; color: var(--muted); font-style: italic; }
+.article-content pre { background: var(--surface-2); padding: 16px; border-radius: 10px; overflow: auto; }
+.article-tags { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 8px; }
+.tag-pill { background: var(--surface-2); border: 1px solid var(--border); color: var(--muted); padding: 5px 12px; border-radius: 999px; font-size: 13px; }
+.tag-pill:hover { color: var(--text); border-color: var(--accent); text-decoration: none; }
+
+/* Sidebar */
+.sidebar .widget { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 22px; }
+.sidebar .widget-title { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin: 0 0 12px; }
+.sidebar ul { list-style: none; margin: 0; padding: 0; }
+.sidebar li { padding: 7px 0; border-bottom: 1px solid var(--border); }
+.sidebar li:last-child { border-bottom: 0; }
+.sidebar a { color: var(--text); }
+
+/* Search form */
+.search-form { display: flex; gap: 8px; }
+.search-form input[type="search"] { flex: 1; background: var(--surface-2); border: 1px solid var(--border); color: var(--text); padding: 10px 12px; border-radius: 8px; font-size: 15px; }
+.search-form button { background: var(--accent); border: 0; color: #fff; padding: 10px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+
+/* Pagination */
+.pagination { margin-top: 34px; display: flex; gap: 8px; flex-wrap: wrap; }
+.pagination .page-numbers { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 8px 14px; border-radius: 8px; }
+.pagination .current { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* Footer */
+.site-footer { border-top: 1px solid var(--border); background: var(--surface); margin-top: 40px; padding: 30px 0; color: var(--muted); font-size: 14px; }
+.footer-inner { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: center; }
+
+/* 404 / empty */
+.notice { text-align: center; padding: 60px 0; }
+.notice h1 { font-size: 40px; margin: 0 0 8px; }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .post-grid { grid-template-columns: 1fr; }
+  .main-nav { position: fixed; inset: 64px 0 auto 0; background: var(--surface); border-bottom: 1px solid var(--border); display: none; margin: 0; }
+  .main-nav.open { display: block; }
+  .main-nav ul { flex-direction: column; gap: 0; padding: 8px 20px; }
+  .main-nav li { padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .nav-toggle { display: block; }
+}

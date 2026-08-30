@@ -1,0 +1,61 @@
+services:
+  db:
+    image: mysql:8
+    restart: unless-stopped
+    volumes:
+      - amu_db:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-amu}
+      MYSQL_USER: ${DB_USER:-amu}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-${DB_PASSWORD}}
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - default
+
+  wordpress:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      WORDPRESS_DB_HOST: ${DB_HOST:-db}
+      WORDPRESS_DB_NAME: ${DB_NAME:-amu}
+      WORDPRESS_DB_USER: ${DB_USER:-amu}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD}
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_HOME', '${WP_URL:-https://animemangaupdates.com}');
+        define('WP_SITEURL', '${WP_URL:-https://animemangaupdates.com}');
+        define('WP_MEMORY_LIMIT', '256M');
+        define('DISALLOW_FILE_EDIT', true);
+    volumes:
+      - amu_wpcontent:/var/www/html/wp-content
+    networks:
+      - dokploy-network
+      - default
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=dokploy-network
+      - traefik.http.routers.amu-web.rule=Host(`animemangaupdates.com`) || Host(`www.animemangaupdates.com`)
+      - traefik.http.routers.amu-web.entrypoints=web
+      - traefik.http.routers.amu-web.middlewares=redirect-to-https@file
+      - traefik.http.routers.amu-websecure.rule=Host(`animemangaupdates.com`) || Host(`www.animemangaupdates.com`)
+      - traefik.http.routers.amu-websecure.entrypoints=websecure
+      - traefik.http.routers.amu-websecure.tls=true
+      - traefik.http.routers.amu-websecure.tls.certresolver=letsencrypt
+      - traefik.http.services.amu.loadbalancer.server.port=80
+
+volumes:
+  amu_db:
+  amu_wpcontent:
+
+networks:
+  dokploy-network:
+    external: true
+  default:
