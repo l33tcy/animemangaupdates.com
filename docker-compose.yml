@@ -15,8 +15,6 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-    networks:
-      - default
 
   wordpress:
     build: .
@@ -36,26 +34,10 @@ services:
         define('DISALLOW_FILE_EDIT', true);
     volumes:
       - amu_wpcontent:/var/www/html/wp-content
-    networks:
-      - dokploy-network
-      - default
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=dokploy-network
-      - traefik.http.routers.amu-web.rule=Host(`animemangaupdates.com`) || Host(`www.animemangaupdates.com`)
-      - traefik.http.routers.amu-web.entrypoints=web
-      - traefik.http.routers.amu-web.middlewares=redirect-to-https@file
-      - traefik.http.routers.amu-websecure.rule=Host(`animemangaupdates.com`) || Host(`www.animemangaupdates.com`)
-      - traefik.http.routers.amu-websecure.entrypoints=websecure
-      - traefik.http.routers.amu-websecure.tls=true
-      - traefik.http.routers.amu-websecure.tls.certresolver=letsencrypt
-      - traefik.http.services.amu.loadbalancer.server.port=80
+
+# Ingress (Traefik labels + dokploy-network) is added by Dokploy when a domain is
+# attached to the `wordpress` service — don't hardcode it, it breaks the db path.
 
 volumes:
   amu_db:
   amu_wpcontent:
-
-networks:
-  dokploy-network:
-    external: true
-  default:
