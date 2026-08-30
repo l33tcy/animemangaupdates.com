@@ -3,7 +3,7 @@ Theme Name: AnimeMangaUpdates
 Theme URI: https://animemangaupdates.com
 Description: Modern anime and manga news magazine theme, using the brand blue and orange palette with solid colours, a full width Featured grid, animated mobile menu, collapsible table of contents and a full screen search with live suggestions. Yoast and ACF ready.
 Author: l33tcy
-Version: 4.0.0
+Version: 4.1.0
 Requires at least: 6.0
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
@@ -63,9 +63,9 @@ button { font-family: inherit; cursor: pointer; }
 .nav-inner { display: flex; align-items: center; gap: 22px; height: var(--nav-h); }
 .brand { display: inline-flex; align-items: center; gap: 3px; font-family: var(--f-display); font-weight: 800; font-size: 20px; letter-spacing: -.02em; color: #fff; white-space: nowrap; }
 .brand b { color: var(--secondary); }
-.brand .custom-logo-link { display: block; line-height: 0; }
-.brand img.custom-logo { height: 24px; width: auto; display: block; }
-@media (max-width: 560px) { .brand img.custom-logo { height: 20px; } }
+.custom-logo-link { display: inline-flex; align-items: center; line-height: 0; height: var(--nav-h); }
+img.custom-logo { height: 26px !important; width: auto; max-height: 26px; display: block; }
+@media (max-width: 560px) { img.custom-logo { height: 22px !important; max-height: 22px; } }
 
 .primary-nav { display: flex; min-width: 0; }
 .primary-nav > ul { list-style: none; display: flex; align-items: center; gap: 2px; margin: 0; padding: 0; flex-wrap: nowrap; }

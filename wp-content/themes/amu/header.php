@@ -31,15 +31,19 @@ if ( ! function_exists( 'amu_menu_fallback' ) ) {
 
 <header class="site-header">
 	<div class="wrap nav-inner">
-		<a class="brand" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-			<?php
-			if ( has_custom_logo() ) {
-				the_custom_logo();
-			} else {
-				echo wp_kses_post( str_ireplace( 'Manga', '<b>Manga</b>', esc_html( get_bloginfo( 'name' ) ) ) );
-			}
-			?>
-		</a>
+		<?php
+		// the_custom_logo() outputs its own <a> to home, so don't wrap it in another
+		// anchor (nested <a> gets broken out by the browser and drops our sizing).
+		if ( has_custom_logo() ) {
+			the_custom_logo();
+		} else {
+			printf(
+				'<a class="brand" href="%s" rel="home">%s</a>',
+				esc_url( home_url( '/' ) ),
+				wp_kses_post( str_ireplace( 'Manga', '<b>Manga</b>', esc_html( get_bloginfo( 'name' ) ) ) )
+			);
+		}
+		?>
 
 		<nav class="primary-nav" aria-label="<?php esc_attr_e( 'Primary', 'amu' ); ?>">
 			<?php wp_nav_menu( $amu_menu_args ); ?>
