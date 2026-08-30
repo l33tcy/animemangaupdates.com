@@ -3,7 +3,7 @@ Theme Name: AnimeMangaUpdates
 Theme URI: https://animemangaupdates.com
 Description: Modern anime and manga news magazine theme, using the brand red and blue palette with solid colours, a full width Featured grid, animated mobile menu, collapsible table of contents and a full screen search with live suggestions. Yoast and ACF ready.
 Author: l33tcy
-Version: 5.7.0
+Version: 5.8.0
 Requires at least: 6.0
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
@@ -85,35 +85,50 @@ img.custom-logo { height: 150px !important; width: auto; max-height: 150px; disp
 .header-top .icon-btn { border-color: rgba(12,15,23,.2); color: #0c0f17; }
 .header-top .icon-btn:hover { background: rgba(12,15,23,.06); border-color: #0c0f17; }
 .nav-burger { display: none; }
-.theme-toggle .sun { display: block; } .theme-toggle .moon { display: none; }
-:root[data-theme="light"] .theme-toggle .sun { display: none; }
-:root[data-theme="light"] .theme-toggle .moon { display: block; }
 
-/* Follow on Google News CTA */
-.btn-gnews { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 10px; background: var(--primary); color: #fff; font-family: var(--f-display); font-weight: 800; font-size: 14px; border: 0; white-space: nowrap; transition: background .15s; }
-.btn-gnews:hover { background: var(--primary-2); color: #fff; }
-.btn-gnews svg { width: 18px; height: 18px; }
-.btn-gnews .g { color: var(--yellow); }
-@media (max-width: 620px) { .btn-gnews .label { display: none; } .btn-gnews { padding: 0 12px; } }
+/* Day/night switch: sliding knob carries the current mode's icon; the track
+   turns warm-gold in light and deep-navy in dark. */
+.theme-switch { position: relative; width: 58px; height: 30px; padding: 0; border: 1.5px solid rgba(12,15,23,.16); border-radius: 999px; background: linear-gradient(120deg, #1b2233, #0f1524); transition: background .3s, border-color .3s; flex: none; }
+:root[data-theme="light"] .theme-switch { background: linear-gradient(120deg, #fdefcf, #f6dfa8); border-color: rgba(214,160,40,.45); }
+.theme-switch:focus-visible { outline: 2px solid var(--secondary); outline-offset: 2px; }
+.theme-switch .ts-thumb { position: absolute; top: 2px; left: 2px; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 2px 7px rgba(0,0,0,.32); display: grid; place-items: center; transform: translateX(28px); transition: transform .32s cubic-bezier(.16,.84,.28,1); }
+:root[data-theme="light"] .theme-switch .ts-thumb { transform: translateX(0); }
+.theme-switch svg { width: 14px; height: 14px; stroke-width: 2.2; fill: none; }
+.theme-switch .sun { display: none; stroke: #f5a623; } .theme-switch .moon { display: block; stroke: #2b3550; }
+:root[data-theme="light"] .theme-switch .sun { display: block; } :root[data-theme="light"] .theme-switch .moon { display: none; }
+
+/* Follow on Google News CTA — icon rides a white chip so the multicolor mark stays crisp on red */
+.btn-gnews { display: inline-flex; align-items: center; gap: 9px; height: 40px; padding: 0 16px; border-radius: 10px; background: var(--primary); color: #fff; font-family: var(--f-display); font-weight: 800; font-size: 14px; border: 0; white-space: nowrap; transition: background .15s, box-shadow .15s, transform .15s; }
+.btn-gnews:hover { background: var(--primary-2); color: #fff; box-shadow: 0 8px 22px -10px rgba(255,48,64,.75); }
+.btn-gnews:active { transform: translateY(1px); }
+.btn-gnews .gn-logo { width: 20px; height: 16px; background: #fff; padding: 3px; border-radius: 5px; box-sizing: content-box; box-shadow: 0 1px 2px rgba(0,0,0,.2); }
+@media (max-width: 620px) { .header-top .btn-gnews { padding: 0 12px; } }
 
 /* ============================================================ mobile drawer (solid) */
 .mobile-drawer { position: fixed; inset: 0; z-index: 80; background: var(--navy); color: #fff; transform: translateY(-100%); opacity: 0; visibility: hidden; transition: transform .42s cubic-bezier(.16,.84,.28,1), opacity .28s, visibility .42s; display: flex; flex-direction: column; padding: 16px 24px 40px; overflow-y: auto; }
 .mobile-drawer.open { transform: translateY(0); opacity: 1; visibility: visible; }
-.drawer-head { display: flex; align-items: center; justify-content: space-between; height: var(--nav-h); }
-.drawer-close { width: 44px; height: 44px; border: 1.5px solid rgba(255,255,255,.4); border-radius: 12px; background: transparent; color: #fff; font-size: 22px; line-height: 1; }
-.mobile-drawer ul { list-style: none; margin: 20px 0 0; padding: 0; }
-.mobile-drawer li { border-bottom: 1px solid rgba(255,255,255,.14); opacity: 0; transform: translateX(-16px); }
+.drawer-head { display: flex; align-items: center; justify-content: space-between; height: var(--nav-h); padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,.1); position: relative; }
+.drawer-head::after { content: ""; position: absolute; left: 0; bottom: -1px; width: 64px; height: 2px; background: linear-gradient(90deg, var(--primary), var(--secondary)); }
+.drawer-head .brand { font-size: 22px; }
+.drawer-close { width: 44px; height: 44px; border: 1.5px solid rgba(255,255,255,.4); border-radius: 12px; background: transparent; color: #fff; font-size: 22px; line-height: 1; transition: background .15s, border-color .15s, transform .2s; }
+.drawer-close:hover { background: rgba(255,255,255,.12); border-color: #fff; transform: rotate(90deg); }
+.mobile-drawer ul { list-style: none; margin: 24px 0 0; padding: 0; }
+.mobile-drawer li { border-bottom: 1px solid rgba(255,255,255,.1); opacity: 0; transform: translateX(-16px); }
 .mobile-drawer.open li { animation: drawerIn .5s cubic-bezier(.16,.84,.28,1) forwards; }
 .mobile-drawer.open li:nth-child(1){animation-delay:.06s}.mobile-drawer.open li:nth-child(2){animation-delay:.11s}
 .mobile-drawer.open li:nth-child(3){animation-delay:.16s}.mobile-drawer.open li:nth-child(4){animation-delay:.21s}
 .mobile-drawer.open li:nth-child(5){animation-delay:.26s}.mobile-drawer.open li:nth-child(6){animation-delay:.31s}
 .mobile-drawer.open li:nth-child(7){animation-delay:.36s}.mobile-drawer.open li:nth-child(n+8){animation-delay:.4s}
-.mobile-drawer a { display: flex; align-items: center; justify-content: space-between; color: #fff; font-family: var(--f-display); font-weight: 800; font-size: 28px; letter-spacing: -.02em; padding: 15px 2px; }
-.mobile-drawer a::after { content: ">"; color: var(--secondary); font-size: 20px; opacity: 0; transform: translateX(-8px); transition: .2s; }
-.mobile-drawer a:hover::after { opacity: 1; transform: none; }
-.drawer-gnews { display: inline-flex; align-items: center; gap: 10px; margin-top: 26px; padding: 15px 24px; height: auto; border-radius: 12px; background: var(--primary); color: #fff; font-family: var(--f-display); font-weight: 800; font-size: 17px; align-self: flex-start; }
+.mobile-drawer a { display: flex; align-items: center; justify-content: space-between; color: #fff; font-family: var(--f-display); font-weight: 800; font-size: 25px; letter-spacing: -.02em; padding: 17px 4px; position: relative; transition: color .18s, padding .18s; }
+.mobile-drawer a::before { content: ""; position: absolute; left: -24px; top: 50%; width: 4px; height: 56%; border-radius: 0 4px 4px 0; background: var(--primary); transform: translateY(-50%) scaleY(0); transform-origin: center; transition: transform .2s; }
+.mobile-drawer a:hover, .mobile-drawer a:active { color: var(--secondary); padding-left: 8px; }
+.mobile-drawer a:hover::before, .mobile-drawer a:active::before { transform: translateY(-50%) scaleY(1); }
+.mobile-drawer a::after { content: ""; width: 9px; height: 9px; border-right: 2.5px solid rgba(255,255,255,.4); border-top: 2.5px solid rgba(255,255,255,.4); transform: rotate(45deg); transition: transform .2s, border-color .2s; flex: none; }
+.mobile-drawer a:hover::after, .mobile-drawer a:active::after { border-color: var(--secondary); transform: rotate(45deg) translate(2px, -2px); }
+.drawer-gnews { display: flex; align-items: center; justify-content: center; gap: 12px; align-self: stretch; width: 100%; margin-top: 32px; padding: 17px 24px; height: auto; border-radius: 14px; background: var(--primary); color: #fff; font-family: var(--f-display); font-weight: 800; font-size: 18px; box-shadow: 0 12px 32px -12px rgba(255,48,64,.65); transition: background .15s, transform .15s; }
 .drawer-gnews:hover { background: var(--primary-2); color: #fff; }
-.drawer-gnews .gn-logo { width: 24px; height: 20px; border-radius: 4px; }
+.drawer-gnews:active { transform: translateY(1px); }
+.drawer-gnews .gn-logo { width: 24px; height: 20px; background: #fff; padding: 3px; border-radius: 6px; box-sizing: content-box; }
 .drawer-gnews .label { display: inline; } /* keep the text in the mobile drawer despite the 620px icon-only rule */
 @keyframes drawerIn { to { opacity: 1; transform: none; } }
 
@@ -291,15 +306,14 @@ img.custom-logo { height: 150px !important; width: auto; max-height: 150px; disp
 
 /* ============================================================ responsive */
 @media (max-width: 1180px) { .card-grid { grid-template-columns: repeat(3, 1fr); } .card.-lead { grid-column: span 3; } .footer-top { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 1024px) { .header-bottom { display: none; } .nav-burger { display: grid; } }
+@media (max-width: 1024px) { .header-bottom { display: none; } .nav-burger { display: grid; } .header-top .btn-gnews { display: none; } }
 @media (max-width: 860px) { .card-grid { grid-template-columns: repeat(2, 1fr); } .card.-lead { grid-column: span 2; } .search-cols { grid-template-columns: 1fr; gap: 30px; } .filters { width: 100%; margin-left: 0; } }
 @media (max-width: 560px) { body { font-size: 16px; } .card-grid { grid-template-columns: 1fr; } .card.-lead, .card.-lead .card-thumb { grid-column: span 1; } .feature-head h1, .feature-head h2 { font-size: 44px; } .footer-top { grid-template-columns: 1fr; gap: 26px; } }
 
 /* Google News CTA (white card per redesign) + email reveal button */
 .gnews-callout { background: #ffffff; border-color: var(--primary); color: #0c0f17; }
 .gnews-callout .gn-txt { color: #0c0f17; font-weight: 800; }
-.btn-gnews { gap: 9px; }
-.btn-gnews .gn-logo { width: 22px; height: 18px; border-radius: 3px; flex: none; }
+.btn-gnews .gn-logo { flex: none; }
 .reveal-email { display: inline-flex; align-items: center; gap: 8px; background: var(--primary); color: #fff; border: 0; border-radius: 9px; font-family: var(--f-display); font-weight: 800; font-size: 15px; padding: 11px 20px; cursor: pointer; }
 .reveal-email:hover { background: var(--primary-2); }
 a.reveal-email.revealed { background: transparent; color: var(--primary); padding: 0; text-decoration: underline; }

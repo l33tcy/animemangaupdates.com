@@ -50,9 +50,11 @@ if ( ! function_exists( 'amu_menu_fallback' ) ) {
 				<button class="icon-btn js-search-open" aria-label="<?php esc_attr_e( 'Search', 'amu' ); ?>">
 					<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
 				</button>
-				<button class="icon-btn theme-toggle js-theme-toggle" aria-label="<?php esc_attr_e( 'Toggle light/dark', 'amu' ); ?>">
-					<svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>
-					<svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+				<button class="theme-switch js-theme-toggle" role="switch" aria-label="<?php esc_attr_e( 'Toggle light/dark', 'amu' ); ?>">
+					<span class="ts-thumb">
+						<svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>
+						<svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+					</span>
 				</button>
 				<button class="icon-btn nav-burger js-drawer-open" aria-label="<?php esc_attr_e( 'Menu', 'amu' ); ?>">
 					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
