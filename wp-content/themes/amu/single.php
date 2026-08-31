@@ -48,6 +48,7 @@ get_header();
 				<?php amu_gnews_callout(); ?>
 			</article>
 
+			<?php amu_author_box(); ?>
 			<?php amu_post_nav(); ?>
 			<?php amu_related_posts( 3 ); ?>
 

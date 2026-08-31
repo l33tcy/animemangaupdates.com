@@ -109,6 +109,52 @@ add_action( 'wp_head', 'amu_meta_keywords', 1 );
 
 /* -------------------------------------------------------------- presentation helpers */
 
+/** Custom per-user avatar via 'amu_avatar' user meta (image URL). */
+add_filter( 'get_avatar_url', function ( $url, $id_or_email, $args ) {
+	$user = false;
+	if ( is_numeric( $id_or_email ) ) {
+		$user = get_user_by( 'id', (int) $id_or_email );
+	} elseif ( $id_or_email instanceof WP_User ) {
+		$user = $id_or_email;
+	} elseif ( $id_or_email instanceof WP_Post ) {
+		$user = get_user_by( 'id', (int) $id_or_email->post_author );
+	} elseif ( is_string( $id_or_email ) && is_email( $id_or_email ) ) {
+		$user = get_user_by( 'email', $id_or_email );
+	}
+	if ( $user ) {
+		$custom = get_user_meta( $user->ID, 'amu_avatar', true );
+		if ( $custom ) {
+			return esc_url_raw( $custom );
+		}
+	}
+	return $url;
+}, 10, 3 );
+
+/** Author bio card (avatar, role title, name, bio) for single posts. */
+function amu_author_box() {
+	$author_id = (int) get_post_field( 'post_author', get_the_ID() );
+	if ( ! $author_id ) {
+		return;
+	}
+	$name = get_the_author_meta( 'display_name', $author_id );
+	$bio  = get_the_author_meta( 'description', $author_id );
+	$role = get_user_meta( $author_id, 'amu_role_title', true );
+	if ( ! $name ) {
+		return;
+	}
+	echo '<section class="author-box">';
+	echo get_avatar( $author_id, 96, '', $name, array( 'class' => 'author-avatar' ) );
+	echo '<div class="author-info">';
+	if ( $role ) {
+		printf( '<span class="author-role">%s</span>', esc_html( $role ) );
+	}
+	printf( '<h3 class="author-name">%s</h3>', esc_html( $name ) );
+	if ( $bio ) {
+		printf( '<p class="author-bio">%s</p>', esc_html( $bio ) );
+	}
+	echo '</div></section>';
+}
+
 /** Estimated reading time in whole minutes. */
 function amu_reading_time( $id = null ) {
 	$words = str_word_count( wp_strip_all_tags( get_post_field( 'post_content', $id ) ) );
