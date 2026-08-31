@@ -3,7 +3,7 @@ Theme Name: AnimeMangaUpdates
 Theme URI: https://animemangaupdates.com
 Description: Modern anime and manga news magazine theme, using the brand red and blue palette with solid colours, a full width Featured grid, animated mobile menu, collapsible table of contents and a full screen search with live suggestions. Yoast and ACF ready.
 Author: l33tcy
-Version: 7.7.4
+Version: 7.7.5
 Requires at least: 6.0
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
@@ -64,16 +64,16 @@ button { font-family: inherit; cursor: pointer; }
 /* ============================================================ navbar (news-portal: light utility bar + menu row) */
 .site-header { position: relative; z-index: 60; background: #fff; border-bottom: 1px solid #e7eaf0; }
 .header-top { background: #fff; }
-.header-top-inner { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; height: 116px; }
+.header-top-inner { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; height: 132px; }
 .brand { display: inline-flex; align-items: center; gap: 3px; font-family: var(--f-display); font-weight: 800; font-size: 24px; letter-spacing: -.02em; color: #0c1220; white-space: nowrap; }
 .brand b { color: var(--secondary); }
 .header-top-inner .custom-logo-link, .header-top-inner > .brand { grid-column: 2; justify-self: center; }
 .custom-logo-link { display: inline-flex; align-items: center; line-height: 0; }
-img.custom-logo { height: 84px !important; width: auto; max-height: 84px; display: block; }
+img.custom-logo { height: 110px !important; width: auto; max-height: 110px; display: block; }
 .ht-left { grid-column: 1; justify-self: start; }
 .ht-right { grid-column: 3; justify-self: end; }
-@media (max-width: 768px) { .header-top-inner { height: 84px; } img.custom-logo { height: 60px !important; max-height: 60px; } }
-@media (max-width: 480px) { .header-top-inner { height: 74px; gap: 10px; } img.custom-logo { height: 48px !important; max-height: 48px; } }
+@media (max-width: 768px) { .header-top-inner { height: 100px; } img.custom-logo { height: 76px !important; max-height: 76px; } }
+@media (max-width: 480px) { .header-top-inner { height: 86px; gap: 10px; } img.custom-logo { height: 60px !important; max-height: 60px; } }
 
 /* search pill */
 .search-pill { display: inline-flex; align-items: center; gap: 10px; height: 42px; min-width: 230px; padding: 0 18px; border-radius: 999px; border: 1.5px solid #e2e6ee; background: #f3f5f9; color: #6b7482; font-family: var(--f-body); font-size: 14px; transition: border-color .15s, background .15s; }
