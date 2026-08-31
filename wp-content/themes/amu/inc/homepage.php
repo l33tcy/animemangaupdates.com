@@ -165,6 +165,47 @@ function amu_category_blocks( $max = 0 ) {
 	echo '</div>';
 }
 
+/** Auto-sliding hero carousel of trending (most-read) posts. JS in assets/js/main.js. */
+function amu_hero_slider( $n = 5 ) {
+	$posts = amu_most_read( $n );
+	$total = count( $posts );
+	if ( $total < 2 ) {
+		return; // nothing to slide
+	}
+	?>
+	<section class="hero-slider" aria-roledescription="carousel" aria-label="<?php esc_attr_e( 'Trending stories', 'amu' ); ?>" data-interval="5500">
+		<div class="hs-track">
+			<?php $i = 0; foreach ( $posts as $p ) :
+				$cats = get_the_category( $p->ID );
+				$k    = ! empty( $cats ) ? $cats[0] : null;
+				?>
+				<article class="hs-slide<?php echo 0 === $i ? ' is-active' : ''; ?>" aria-roledescription="slide"<?php echo 0 === $i ? '' : ' aria-hidden="true"'; ?>>
+					<a class="hs-media" href="<?php echo esc_url( get_permalink( $p ) ); ?>" tabindex="-1" aria-hidden="true"><?php
+						echo has_post_thumbnail( $p )
+							? get_the_post_thumbnail( $p, 'amu_hero', array( 'loading' => 0 === $i ? 'eager' : 'lazy', 'alt' => '' ) ) // phpcs:ignore
+							: '<span class="ph"></span>';
+					?><span class="hs-scrim"></span></a>
+					<div class="hs-caption">
+						<span class="hs-eyebrow"><?php esc_html_e( 'Trending', 'amu' ); ?></span>
+						<?php if ( $k ) : ?><a class="hs-kicker" href="<?php echo esc_url( get_category_link( $k->term_id ) ); ?>" style="--tag:<?php echo esc_attr( amu_term_color( $k ) ); ?>"><?php echo esc_html( $k->name ); ?></a><?php endif; ?>
+						<h2 class="hs-title"><a href="<?php echo esc_url( get_permalink( $p ) ); ?>"><?php echo esc_html( get_the_title( $p ) ); ?></a></h2>
+						<p class="hs-excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt( $p ), 24 ) ); ?></p>
+					</div>
+				</article>
+			<?php $i++; endforeach; ?>
+		</div>
+		<button class="hs-arrow hs-prev" type="button" aria-label="<?php esc_attr_e( 'Previous slide', 'amu' ); ?>">&lsaquo;</button>
+		<button class="hs-arrow hs-next" type="button" aria-label="<?php esc_attr_e( 'Next slide', 'amu' ); ?>">&rsaquo;</button>
+		<div class="hs-dots">
+			<?php for ( $d = 0; $d < $total; $d++ ) : ?>
+				<button class="hs-dot<?php echo 0 === $d ? ' is-active' : ''; ?>" type="button" aria-label="<?php echo esc_attr( sprintf( /* translators: %d: slide number */ __( 'Go to slide %d', 'amu' ), $d + 1 ) ); ?>"></button>
+			<?php endfor; ?>
+		</div>
+		<div class="hs-progress"><span></span></div>
+	</section>
+	<?php
+}
+
 /** One horizontal editorial row (Game Informer style): thumb + coloured kicker + headline + excerpt + date. */
 function amu_editorial_row( $post ) {
 	$cats = get_the_category( $post->ID );

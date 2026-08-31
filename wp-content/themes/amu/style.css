@@ -3,7 +3,7 @@ Theme Name: AnimeMangaUpdates
 Theme URI: https://animemangaupdates.com
 Description: Modern anime and manga news magazine theme, using the brand red and blue palette with solid colours, a full width Featured grid, animated mobile menu, collapsible table of contents and a full screen search with live suggestions. Yoast and ACF ready.
 Author: l33tcy
-Version: 7.7.3
+Version: 7.7.4
 Requires at least: 6.0
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
@@ -403,10 +403,37 @@ a.reveal-email.revealed { background: transparent; color: var(--primary); paddin
 @media (max-width: 900px) { .hero-mosaic { aspect-ratio: auto; grid-template-columns: repeat(2, 1fr); grid-template-rows: none; } .ov-card { aspect-ratio: 4/3; } .ov-card.ov-lead { grid-column: span 2; grid-row: auto; aspect-ratio: 16/9; } }
 @media (max-width: 520px) { .hero-mosaic { grid-template-columns: 1fr; } .ov-card, .ov-card.ov-lead { grid-column: span 1; aspect-ratio: 16/10; } }
 
-/* ============================================================ homepage: masthead H1 */
-.home-masthead { margin: 2px 0 20px; }
-.home-h1 { display: flex; align-items: center; gap: 10px; margin: 0; font-family: var(--f-label); font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); }
-.home-h1 .hm-mark { flex: none; width: 10px; height: 10px; border-radius: 2px; background: var(--primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 22%, transparent); }
+/* Screen-reader-only (keeps an H1 for SEO without showing it). */
+.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+/* ============================================================ homepage: hero slider (auto-sliding trending) */
+.hero-slider { position: relative; border-radius: 16px; overflow: hidden; margin: 6px 0 32px; background: var(--panel-2); box-shadow: var(--shadow); isolation: isolate; }
+.hs-track { position: relative; height: clamp(340px, 46vw, 480px); }
+.hs-slide { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity .7s ease; }
+.hs-slide.is-active { opacity: 1; visibility: visible; }
+.hs-media { position: absolute; inset: 0; display: block; }
+.hs-media img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.07); transition: transform 7s linear; }
+.hs-slide.is-active .hs-media img { transform: scale(1); }
+.hs-media .ph { position: absolute; inset: 0; background: linear-gradient(135deg, var(--panel-2), var(--panel)); }
+.hs-scrim { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(6,7,10,.9) 0%, rgba(6,7,10,.55) 44%, rgba(6,7,10,.04) 80%), linear-gradient(0deg, rgba(6,7,10,.82), transparent 58%); }
+.hs-caption { position: absolute; left: 0; right: 0; bottom: 0; max-width: 660px; padding: 34px 40px 44px; z-index: 2; }
+.hs-eyebrow { display: inline-block; font-family: var(--f-label); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .16em; color: var(--gold); margin-bottom: 12px; }
+.hs-kicker { display: inline-block; margin: 0 0 12px 10px; padding: 4px 9px; border-radius: 5px; background: var(--tag, var(--secondary)); color: #fff; font-family: var(--f-label); font-weight: 700; font-size: 10.5px; text-transform: uppercase; letter-spacing: .07em; }
+.hs-title { margin: 0 0 10px; font-family: var(--f-display); font-weight: 800; font-size: clamp(26px, 3.6vw, 46px); line-height: 1.05; letter-spacing: -.03em; text-wrap: balance; }
+.hs-title a { color: #fff; } .hs-title a:hover { color: var(--gold); }
+.hs-excerpt { margin: 0; font-family: var(--f-body); font-size: 16px; line-height: 1.5; color: rgba(255,255,255,.82); max-width: 580px; }
+.hs-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 3; width: 46px; height: 46px; border-radius: 50%; border: 0; background: rgba(10,11,14,.5); color: #fff; font-size: 26px; line-height: 1; cursor: pointer; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); display: grid; place-items: center; transition: background .2s ease, transform .2s ease; }
+.hs-arrow:hover { background: var(--primary); transform: translateY(-50%) scale(1.06); }
+.hs-prev { left: 16px; } .hs-next { right: 16px; }
+.hs-dots { position: absolute; right: 24px; bottom: 24px; z-index: 3; display: flex; gap: 8px; }
+.hs-dot { width: 9px; height: 9px; border-radius: 50%; border: 0; padding: 0; background: rgba(255,255,255,.4); cursor: pointer; transition: background .2s ease, transform .2s ease; }
+.hs-dot:hover { background: rgba(255,255,255,.7); }
+.hs-dot.is-active { background: #fff; transform: scale(1.3); }
+.hs-progress { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; z-index: 3; background: rgba(255,255,255,.14); }
+.hs-progress span { display: block; height: 100%; width: 0; background: var(--primary); }
+.hs-progress span.run { transition-property: width; transition-timing-function: linear; }
+@media (max-width: 560px) { .hs-excerpt { display: none; } .hs-caption { padding: 22px 22px 30px; } .hs-arrow { display: none; } }
+@media (prefers-reduced-motion: reduce) { .hs-media img, .hs-slide { transition: none; } }
 
 /* ============================================================ homepage: editorial layout (main rows + Popular aside) */
 .home-grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 48px; align-items: start; margin-top: 6px; }
@@ -515,7 +542,7 @@ a.reveal-email.revealed { background: transparent; color: var(--primary); paddin
 .post-single { display: block; }
 .post-hero { margin: 6px 0 26px; }
 .post-hero .breadcrumbs { margin-bottom: 14px; }
-.post-title { font-family: var(--f-display); font-weight: 800; font-size: clamp(32px, 4.6vw, 58px); line-height: 1.04; letter-spacing: -.03em; color: var(--ink); margin: 0; max-width: 20ch; }
+.post-title { font-family: var(--f-display); font-weight: 800; font-size: clamp(32px, 4.6vw, 58px); line-height: 1.04; letter-spacing: -.03em; color: var(--ink); margin: 0; max-width: 32ch; }
 .post-byline { margin: 18px 0 0; font-family: var(--f-body); font-size: 15px; color: var(--muted); }
 .post-byline b { color: var(--ink); font-weight: 700; }
 .post-byline .dot { opacity: .5; margin: 0 4px; }

@@ -130,3 +130,58 @@
     });
   });
 })();
+
+/* hero slider: auto-advancing trending carousel (pauses on hover / hidden tab; respects reduced-motion) */
+(function () {
+  var root = document.querySelector('.hero-slider');
+  if (!root) return;
+  var slides = Array.prototype.slice.call(root.querySelectorAll('.hs-slide'));
+  var dots = Array.prototype.slice.call(root.querySelectorAll('.hs-dot'));
+  if (slides.length < 2) return;
+  var bar = root.querySelector('.hs-progress span');
+  var interval = parseInt(root.getAttribute('data-interval'), 10) || 5500;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cur = 0, timer = null;
+
+  function show(n) {
+    n = (n + slides.length) % slides.length;
+    if (n === cur) return;
+    slides[cur].classList.remove('is-active');
+    slides[cur].setAttribute('aria-hidden', 'true');
+    if (dots[cur]) dots[cur].classList.remove('is-active');
+    cur = n;
+    slides[cur].classList.add('is-active');
+    slides[cur].removeAttribute('aria-hidden');
+    if (dots[cur]) dots[cur].classList.add('is-active');
+  }
+
+  function runBar() {
+    if (!bar || reduce) return;
+    bar.classList.remove('run');
+    bar.style.width = '0';
+    void bar.offsetWidth; /* reflow so the transition restarts cleanly */
+    bar.style.transitionDuration = interval + 'ms';
+    bar.classList.add('run');
+    bar.style.width = '100%';
+  }
+  function start() {
+    if (reduce || timer) return;
+    runBar();
+    timer = setInterval(function () { show(cur + 1); runBar(); }, interval);
+  }
+  function stop() {
+    if (timer) { clearInterval(timer); timer = null; }
+    if (bar) { bar.classList.remove('run'); bar.style.width = '0'; }
+  }
+  function restart() { stop(); start(); }
+
+  var next = root.querySelector('.hs-next'), prev = root.querySelector('.hs-prev');
+  if (next) next.addEventListener('click', function () { show(cur + 1); restart(); });
+  if (prev) prev.addEventListener('click', function () { show(cur - 1); restart(); });
+  dots.forEach(function (d, i) { d.addEventListener('click', function () { show(i); restart(); }); });
+  root.addEventListener('mouseenter', stop);
+  root.addEventListener('mouseleave', start);
+  document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
+
+  start();
+})();

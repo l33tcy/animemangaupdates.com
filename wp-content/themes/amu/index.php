@@ -13,10 +13,10 @@ $is_front = ( is_home() || is_front_page() ) && ! is_paged();
 
 	<?php if ( $is_front && have_posts() ) : ?>
 
-		<?php // ---- MASTHEAD: single H1 stating the page topic for crawlers ---- ?>
-		<header class="home-masthead">
-			<h1 class="home-h1"><span class="hm-mark" aria-hidden="true"></span><?php echo esc_html( get_bloginfo( 'name' ) ); ?>: <?php esc_html_e( 'Anime & Manga News, Releases & Guides', 'amu' ); ?></h1>
-		</header>
+		<h1 class="sr-only"><?php esc_html_e( 'Anime &amp; Manga News', 'amu' ); ?></h1>
+
+		<?php // ---- HERO SLIDER: auto-sliding trending posts ---- ?>
+		<?php amu_hero_slider(); ?>
 
 		<?php // ---- MAIN (Anime / Manga / Gaming editorial rows) + POPULAR sidebar ---- ?>
 		<div class="home-grid">
