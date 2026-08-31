@@ -162,6 +162,32 @@ function amu_headline_list( $posts, $numbered = false ) {
 	echo '</ul>';
 }
 
+/** Trending Posts sidebar (single-post): red numbered list with thumbnails + dates. */
+function amu_trending_sidebar( $n = 6 ) {
+	$posts = amu_most_read( $n );
+	$posts = array_values( array_filter( $posts, function ( $p ) { return $p->ID !== get_the_ID(); } ) );
+	if ( empty( $posts ) ) {
+		return;
+	}
+	echo '<div class="trending-card"><h2 class="trending-title">' . esc_html__( 'Trending Posts', 'amu' ) . '</h2><ol class="trending-list">';
+	$i = 0;
+	foreach ( $posts as $p ) {
+		$i++;
+		$thumb = has_post_thumbnail( $p )
+			? '<span class="tr-thumb">' . get_the_post_thumbnail( $p, 'thumbnail', array( 'loading' => 'lazy', 'alt' => '' ) ) . '</span>'
+			: '<span class="tr-thumb tr-ph"></span>';
+		printf(
+			'<li><a href="%1$s"><span class="tr-num">%2$d</span>%3$s<span class="tr-body"><span class="tr-t">%4$s</span><span class="tr-date">%5$s</span></span></a></li>',
+			esc_url( get_permalink( $p ) ),
+			$i,
+			$thumb,
+			esc_html( get_the_title( $p ) ),
+			esc_html( get_the_date( 'M j, Y', $p ) )
+		);
+	}
+	echo '</ol></div>';
+}
+
 /** Featured/related posts grid shown at the end of a single post. */
 function amu_related_posts( $count = 3 ) {
 	$args = array(
