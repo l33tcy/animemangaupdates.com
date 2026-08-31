@@ -49,6 +49,7 @@ get_header();
 			</article>
 
 			<?php amu_post_nav(); ?>
+			<?php amu_related_posts( 3 ); ?>
 
 			<?php
 			if ( comments_open() || get_comments_number() ) {

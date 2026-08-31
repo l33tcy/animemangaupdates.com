@@ -3,7 +3,7 @@ Theme Name: AnimeMangaUpdates
 Theme URI: https://animemangaupdates.com
 Description: Modern anime and manga news magazine theme, using the brand red and blue palette with solid colours, a full width Featured grid, animated mobile menu, collapsible table of contents and a full screen search with live suggestions. Yoast and ACF ready.
 Author: l33tcy
-Version: 7.1.0
+Version: 7.2.0
 Requires at least: 6.0
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
@@ -269,9 +269,12 @@ img.custom-logo { height: 84px !important; width: auto; max-height: 84px; displa
 .search-form { display: flex; border: 1.5px solid var(--line); border-radius: 10px; overflow: hidden; }
 .search-form input[type="search"] { flex: 1; background: var(--panel); border: 0; color: var(--ink); padding: 12px 14px; font-size: 15px; min-width: 0; }
 .search-form button { background: var(--primary); border: 0; color: #fff; padding: 0 18px; font-family: var(--f-display); font-weight: 800; }
-.pagination { margin-top: 46px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-.pagination .page-numbers { font-family: var(--f-display); font-weight: 700; border: 1.5px solid var(--line); border-radius: 10px; color: var(--ink); padding: 10px 16px; }
-.pagination .current, .pagination .page-numbers:hover { background: var(--primary); border-color: var(--primary); color: #fff; }
+.pagination { margin: 50px 0 12px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; align-items: center; }
+.pagination .page-numbers { display: inline-flex; align-items: center; justify-content: center; min-width: 46px; height: 46px; padding: 0 14px; font-family: var(--f-display); font-weight: 700; font-size: 15px; color: var(--ink); background: var(--panel); border: 1.5px solid var(--line); border-radius: 13px; transition: border-color .15s, color .15s, transform .15s, background .15s; }
+.pagination a.page-numbers:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }
+.pagination .current { background: var(--primary); border-color: var(--primary); color: #fff; box-shadow: 0 10px 22px -12px var(--primary); }
+.pagination .dots { border-color: transparent; background: transparent; min-width: 20px; padding: 0; color: var(--muted); }
+.pagination .prev, .pagination .next { font-size: 20px; padding: 0 18px; }
 
 /* ============================================================ footer */
 .site-footer { position: relative; background: var(--bg-2); margin-top: 70px; overflow: hidden; }
@@ -321,9 +324,10 @@ img.custom-logo { height: 84px !important; width: auto; max-height: 84px; displa
 @media (max-width: 860px) { .card-grid { grid-template-columns: repeat(2, 1fr); } .card.-lead { grid-column: span 2; } .search-cols { grid-template-columns: 1fr; gap: 30px; } .filters { width: 100%; margin-left: 0; } }
 @media (max-width: 560px) { body { font-size: 16px; } .card-grid { grid-template-columns: 1fr; } .card.-lead, .card.-lead .card-thumb { grid-column: span 1; } .feature-head h1, .feature-head h2 { font-size: 44px; } .footer-top { grid-template-columns: 1fr; gap: 26px; } }
 
-/* Google News CTA (white card per redesign) + email reveal button */
+/* Google News CTA (white card in both themes) + email reveal button */
 .gnews-callout { background: #ffffff; border-color: var(--primary); color: #0c0f17; }
-.gnews-callout .gn-txt { color: #0c0f17; font-weight: 800; }
+.gnews-callout .gn-txt { color: #4a5262; }
+.gnews-callout .gn-txt strong { color: #0c0f17; } /* fix: strong used var(--ink) = white in dark mode → invisible on the white card */
 .btn-gnews .gn-logo { flex: none; }
 .reveal-email { display: inline-flex; align-items: center; gap: 8px; background: var(--primary); color: #fff; border: 0; border-radius: 9px; font-family: var(--f-display); font-weight: 800; font-size: 15px; padding: 11px 20px; cursor: pointer; }
 .reveal-email:hover { background: var(--primary-2); }
@@ -466,3 +470,11 @@ a.reveal-email.revealed { background: transparent; color: var(--primary); paddin
 .read-list a:hover .rl-title { color: var(--primary); }
 .rl-stamp { display: block; margin-top: 4px; font-family: var(--f-label); font-size: 11.5px; color: var(--muted); }
 @media (max-width: 680px) { .read-list { grid-template-columns: 1fr; } }
+
+/* ============================================================ single: featured/related grid */
+.related { margin-top: 12px; }
+.related .mhead { margin-bottom: 20px; }
+.related .card-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.related .card-title { font-size: 18px; }
+@media (max-width: 680px) { .related .card-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .related .card-grid { grid-template-columns: 1fr; } }

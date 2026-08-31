@@ -162,6 +162,35 @@ function amu_headline_list( $posts, $numbered = false ) {
 	echo '</ul>';
 }
 
+/** Featured/related posts grid shown at the end of a single post. */
+function amu_related_posts( $count = 3 ) {
+	$args = array(
+		'post__not_in'        => array( get_the_ID() ),
+		'posts_per_page'      => $count,
+		'no_found_rows'       => true,
+		'ignore_sticky_posts' => true,
+	);
+	$cats = wp_get_post_categories( get_the_ID() );
+	if ( $cats ) {
+		$args['category__in'] = $cats;
+	}
+	$q = new WP_Query( $args );
+	if ( ! $q->have_posts() && $cats ) { // fall back to recent when the category is thin
+		$q = new WP_Query( array( 'post__not_in' => array( get_the_ID() ), 'posts_per_page' => $count, 'no_found_rows' => true ) );
+	}
+	if ( ! $q->have_posts() ) {
+		wp_reset_postdata();
+		return;
+	}
+	echo '<section class="related"><div class="mhead"><h2>' . esc_html__( 'Featured stories', 'amu' ) . '</h2></div><div class="card-grid">';
+	while ( $q->have_posts() ) {
+		$q->the_post();
+		get_template_part( 'template-parts/content', 'card', array( 'lead' => false ) );
+	}
+	echo '</div></section>';
+	wp_reset_postdata();
+}
+
 /** Minimal "Most read" list — big faint numbers + bold titles, two columns. */
 function amu_most_read_section() {
 	$posts = amu_most_read( 6 );
