@@ -712,17 +712,35 @@ add_filter( 'category_rewrite_rules', function () {
 	return $rules;
 } );
 
-// Tags resolve at the root, replacing the /tag/ rules.
+// Tags resolve at the root, replacing the /tag/ rules — EXCEPT where a category
+// already owns that root path (e.g. category "anime" vs tag "anime"): categories
+// win, so the colliding tag is skipped here and stays reachable only via /tag/.
 add_filter( 'tag_rewrite_rules', function () {
+	$cat_paths = array();
+	foreach ( get_categories( array( 'hide_empty' => false ) ) as $c ) {
+		$p = trim( get_category_parents( $c->term_id, false, '/', true ), '/' );
+		if ( '' !== $p ) { $cat_paths[ $p ] = true; }
+	}
 	$rules = array();
 	foreach ( get_terms( array( 'taxonomy' => 'post_tag', 'hide_empty' => false ) ) as $t ) {
 		if ( is_wp_error( $t ) || empty( $t->slug ) ) { continue; }
 		$s = $t->slug;
+		if ( isset( $cat_paths[ $s ] ) ) { continue; } // a category owns this root slug
 		$rules[ $s . '/feed/(feed|rdf|rss|rss2|atom)/?$' ] = 'index.php?tag=' . $s . '&feed=$matches[1]';
 		$rules[ $s . '/page/?([0-9]{1,})/?$' ]             = 'index.php?tag=' . $s . '&paged=$matches[1]';
 		$rules[ $s . '/?$' ]                               = 'index.php?tag=' . $s;
 	}
 	return $rules;
+} );
+
+// Category & tag archives: 20 posts per page (the homepage uses its own queries).
+add_action( 'pre_get_posts', function ( $q ) {
+	if ( is_admin() || ! $q->is_main_query() ) {
+		return;
+	}
+	if ( $q->is_category() || $q->is_tag() || $q->is_tax() ) {
+		$q->set( 'posts_per_page', 20 );
+	}
 } );
 
 // 301 any old /category/... or /tag/... URL to the clean root path.
