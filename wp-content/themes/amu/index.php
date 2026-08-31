@@ -39,10 +39,13 @@ $is_front = ( is_home() || is_front_page() ) && ! is_paged();
 				endwhile;
 				?>
 			</div>
-			<nav class="pagination" aria-label="<?php esc_attr_e( 'Posts', 'amu' ); ?>">
-				<?php echo wp_kses_post( paginate_links( array( 'mid_size' => 1, 'prev_text' => '←', 'next_text' => '→' ) ) ); ?>
-			</nav>
 		<?php endif; ?>
+
+		<?php // ---- CATEGORY BLOCKS: every category, each links "See all" to its paginated archive ---- ?>
+		<section class="home-cats">
+			<div class="mhead"><h2><?php esc_html_e( 'Browse by category', 'amu' ); ?></h2></div>
+			<?php amu_category_blocks(); ?>
+		</section>
 
 		<?php amu_most_read_section(); ?>
 

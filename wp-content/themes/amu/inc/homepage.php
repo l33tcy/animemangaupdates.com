@@ -121,13 +121,17 @@ function amu_category_block( $cat, $count = 4 ) {
 		}
 		echo '</ul>';
 	}
-	printf( '<a class="cat-block-more" href="%s">%s &rarr;</a>', esc_url( $link ), esc_html__( 'More', 'amu' ) );
+	printf( '<a class="cat-block-more" href="%s">%s &rarr;</a>', esc_url( $link ), esc_html__( 'See all', 'amu' ) );
 	echo '</section>';
 }
 
-/** Row of category blocks — the categories that actually have posts (top by count). */
-function amu_category_blocks( $max = 4 ) {
-	$cats = get_categories( array( 'orderby' => 'count', 'order' => 'DESC', 'number' => $max, 'hide_empty' => true, 'exclude' => array( 1 ) ) );
+/** Row of category blocks. $max = 0 renders EVERY category that has posts (ordered by count); >0 caps it. */
+function amu_category_blocks( $max = 0 ) {
+	$args = array( 'orderby' => 'count', 'order' => 'DESC', 'hide_empty' => true, 'exclude' => array( 1 ) );
+	if ( $max > 0 ) {
+		$args['number'] = $max;
+	}
+	$cats = get_categories( $args );
 	if ( empty( $cats ) ) {
 		return;
 	}
