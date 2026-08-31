@@ -32,9 +32,15 @@ if ( ! function_exists( 'amu_menu_fallback' ) ) {
 <header class="site-header">
 	<div class="header-top">
 		<div class="wrap header-top-inner">
+			<div class="ht-left">
+				<button class="search-pill js-search-open" aria-label="<?php esc_attr_e( 'Search', 'amu' ); ?>">
+					<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+					<span><?php esc_html_e( 'Search…', 'amu' ); ?></span>
+				</button>
+			</div>
+
 			<?php
-			// the_custom_logo() outputs its own <a> to home, so don't wrap it in another
-			// anchor (nested <a> gets broken out by the browser and drops our sizing).
+			// the_custom_logo() outputs its own <a> to home, so don't wrap it in another anchor.
 			if ( has_custom_logo() ) {
 				the_custom_logo();
 			} else {
@@ -46,7 +52,8 @@ if ( ! function_exists( 'amu_menu_fallback' ) ) {
 			}
 			?>
 
-			<div class="nav-actions">
+			<div class="ht-right nav-actions">
+				<?php amu_theme_switch(); ?>
 				<button class="icon-btn nav-burger js-drawer-open" aria-label="<?php esc_attr_e( 'Menu', 'amu' ); ?>">
 					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
 				</button>
@@ -55,18 +62,15 @@ if ( ! function_exists( 'amu_menu_fallback' ) ) {
 	</div>
 
 	<div class="header-bottom">
-		<div class="wrap header-bottom-inner">
-			<nav class="primary-nav" aria-label="<?php esc_attr_e( 'Primary', 'amu' ); ?>">
-				<?php wp_nav_menu( $amu_menu_args ); ?>
-			</nav>
-			<div class="nav-actions nav-actions-bar"><?php amu_nav_controls(); ?></div>
-		</div>
+		<nav class="wrap primary-nav" aria-label="<?php esc_attr_e( 'Primary', 'amu' ); ?>">
+			<?php wp_nav_menu( $amu_menu_args ); ?>
+		</nav>
 	</div>
 </header>
 
 <!-- Mobile drawer -->
 <div class="mobile-drawer" id="amuDrawer" aria-hidden="true">
-	<div class="wrap" style="width:100%">
+	<div class="drawer-inner">
 		<div class="drawer-head">
 			<a class="brand drawer-brand" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
 				<?php
@@ -79,10 +83,9 @@ if ( ! function_exists( 'amu_menu_fallback' ) ) {
 			</a>
 			<button class="drawer-close js-drawer-close" aria-label="<?php esc_attr_e( 'Close menu', 'amu' ); ?>">&times;</button>
 		</div>
-		<nav aria-label="<?php esc_attr_e( 'Mobile', 'amu' ); ?>"><?php wp_nav_menu( $amu_menu_args ); ?></nav>
-			<div class="nav-actions drawer-actions"><?php amu_nav_controls(); ?></div>
-		</div>
+		<nav class="drawer-nav" aria-label="<?php esc_attr_e( 'Mobile', 'amu' ); ?>"><?php wp_nav_menu( $amu_menu_args ); ?></nav>
 	</div>
+</div>
 
 <!-- Search overlay -->
 <div class="search-overlay" id="amuSearch" aria-hidden="true" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Search', 'amu' ); ?>">

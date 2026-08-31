@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once get_template_directory() . '/inc/watermark.php'; // logo + domain watermark on uploads
+require_once get_template_directory() . '/inc/homepage.php';  // news-portal homepage components
 
 /* -------------------------------------------------------------- setup */
 function amu_setup() {
@@ -225,12 +226,9 @@ function amu_gnews_icon() {
 	);
 }
 
-/** Search button + day/night switch, reused in the navbar (desktop) and the drawer (mobile). */
-function amu_nav_controls() {
+/** Day/night switch (top utility bar). */
+function amu_theme_switch() {
 	?>
-	<button class="icon-btn js-search-open" aria-label="<?php esc_attr_e( 'Search', 'amu' ); ?>">
-		<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-	</button>
 	<button class="theme-switch js-theme-toggle" role="switch" aria-label="<?php esc_attr_e( 'Toggle light/dark', 'amu' ); ?>">
 		<span class="ts-thumb">
 			<svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>
