@@ -3,7 +3,7 @@ Theme Name: AnimeMangaUpdates
 Theme URI: https://animemangaupdates.com
 Description: Modern anime and manga news magazine theme, using the brand red and blue palette with solid colours, a full width Featured grid, animated mobile menu, collapsible table of contents and a full screen search with live suggestions. Yoast and ACF ready.
 Author: l33tcy
-Version: 7.4.1
+Version: 7.5.0
 Requires at least: 6.0
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
@@ -519,3 +519,27 @@ a.reveal-email.revealed { background: transparent; color: var(--primary); paddin
 .tr-t { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-family: var(--f-display); font-weight: 700; font-size: 14.5px; line-height: 1.28; color: var(--ink); }
 .trending-list a:hover .tr-t { color: var(--primary); }
 .tr-date { display: block; margin-top: 6px; font-family: var(--f-label); font-size: 11.5px; color: var(--muted); }
+
+/* ============================================================ anime calendar */
+.cal-intro { color: var(--muted); max-width: 70ch; margin: -8px 0 26px; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 14px; }
+.cal-day { border: 1.5px solid var(--line); border-radius: 14px; background: var(--panel); overflow: hidden; min-width: 0; display: flex; flex-direction: column; }
+.cal-day.-today { border-color: var(--primary); box-shadow: 0 12px 30px -18px var(--primary); }
+.cal-dayhead { padding: 12px 14px; background: var(--panel-2); border-bottom: 1px solid var(--line); }
+.cal-day.-today .cal-dayhead { background: var(--primary); }
+.cal-dow { display: block; font-family: var(--f-display); font-weight: 800; font-size: 15px; color: var(--ink); text-transform: uppercase; letter-spacing: .03em; }
+.cal-date { display: block; font-family: var(--f-label); font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+.cal-day.-today .cal-dow, .cal-day.-today .cal-date { color: #fff; }
+.cal-slots { padding: 8px; display: flex; flex-direction: column; gap: 4px; max-height: 640px; overflow-y: auto; scrollbar-width: thin; }
+.cal-item { display: flex; align-items: center; gap: 9px; padding: 6px; border-radius: 9px; transition: background .15s; }
+.cal-item:hover { background: var(--panel-2); }
+.cal-time { flex: none; width: 38px; font-family: var(--f-label); font-weight: 700; font-size: 12px; color: var(--primary); }
+.cal-thumb { flex: none; width: 34px; height: 46px; border-radius: 5px; object-fit: cover; background: var(--panel-2); }
+.cal-info { min-width: 0; }
+.cal-title { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-family: var(--f-display); font-weight: 700; font-size: 12.5px; line-height: 1.2; color: var(--ink); }
+.cal-item:hover .cal-title { color: var(--primary); }
+.cal-ep { display: block; margin-top: 2px; font-family: var(--f-label); font-size: 10.5px; color: var(--muted); }
+.cal-empty { text-align: center; color: var(--muted); font-size: 13px; padding: 18px 6px; margin: 0; }
+.cal-updated { text-align: center; color: var(--muted); font-family: var(--f-label); font-size: 12px; letter-spacing: .03em; margin-top: 24px; }
+@media (max-width: 1100px) { .cal-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 760px) { .cal-grid { grid-template-columns: 1fr; } .cal-slots { max-height: none; } }

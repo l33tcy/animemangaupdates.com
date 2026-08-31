@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once get_template_directory() . '/inc/watermark.php'; // logo + domain watermark on uploads
 require_once get_template_directory() . '/inc/homepage.php';  // news-portal homepage components
+require_once get_template_directory() . '/inc/calendar.php';  // anime airing calendar (daily-refreshed, DB-stored)
 
 /* -------------------------------------------------------------- setup */
 function amu_setup() {
