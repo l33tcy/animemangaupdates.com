@@ -3,7 +3,7 @@ Theme Name: AnimeMangaUpdates
 Theme URI: https://animemangaupdates.com
 Description: Modern anime and manga news magazine theme, using the brand red and blue palette with solid colours, a full width Featured grid, animated mobile menu, collapsible table of contents and a full screen search with live suggestions. Yoast and ACF ready.
 Author: l33tcy
-Version: 7.7.6
+Version: 7.7.7
 Requires at least: 6.0
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
@@ -265,6 +265,9 @@ img.custom-logo { height: 132px !important; width: auto; max-height: 132px; }
 .toc ol { margin: 0; padding: 4px 20px 18px 40px; display: grid; gap: 7px; }
 .toc a { color: var(--ink); text-decoration: none; }
 .toc a:hover { color: var(--primary); text-decoration: underline; }
+.toc .toc-sub { padding: 7px 0 3px 16px; margin-top: 6px; gap: 5px; border-left: 2px solid var(--line); }
+.toc .toc-sub a { font-size: 14px; color: var(--muted); }
+.toc .toc-sub a:hover { color: var(--primary); }
 
 /* Follow on Google News callout (in content / footer) */
 .gnews-callout { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; border: 1.5px solid var(--line); border-radius: var(--radius); background: linear-gradient(120deg, var(--panel), var(--panel-2)); padding: 22px 26px; margin: 40px 0 8px; position: relative; overflow: hidden; }

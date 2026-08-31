@@ -421,22 +421,44 @@ function amu_add_toc( $content ) {
 	if ( ! is_singular( 'post' ) || ! in_the_loop() || ! is_main_query() ) {
 		return $content;
 	}
-	if ( ! preg_match_all( '/<h2([^>]*)>(.*?)<\/h2>/is', $content, $m, PREG_SET_ORDER ) || count( $m ) < 2 ) {
+	if ( ! preg_match_all( '/<(h2|h3)([^>]*)>(.*?)<\/\1>/is', $content, $m, PREG_SET_ORDER ) || count( $m ) < 2 ) {
 		return $content;
 	}
-	$items = '';
 	$used  = array();
+	$nodes = array();
 	foreach ( $m as $h ) {
-		$text = trim( wp_strip_all_tags( $h[2] ) );
+		$tag  = strtolower( $h[1] );
+		$text = trim( wp_strip_all_tags( $h[3] ) );
 		if ( '' === $text ) { continue; }
-		$slug = sanitize_title( $text );
-		if ( isset( $used[ $slug ] ) ) { $used[ $slug ]++; $slug .= '-' . $used[ $slug ]; } else { $used[ $slug ] = 1; }
-		if ( false === strpos( $h[1], 'id=' ) ) {
-			$content = str_replace( $h[0], '<h2' . $h[1] . ' id="' . esc_attr( $slug ) . '">' . $h[2] . '</h2>', $content );
+		if ( preg_match( '/id=["\']([^"\']+)["\']/', $h[2], $idm ) ) {
+			$slug = $idm[1];
+		} else {
+			$slug = sanitize_title( $text );
+			if ( isset( $used[ $slug ] ) ) { $used[ $slug ]++; $slug .= '-' . $used[ $slug ]; } else { $used[ $slug ] = 1; }
+			$content = str_replace( $h[0], '<' . $tag . $h[2] . ' id="' . esc_attr( $slug ) . '">' . $h[3] . '</' . $tag . '>', $content );
 		}
-		$items .= '<li><a href="#' . esc_attr( $slug ) . '">' . esc_html( $text ) . '</a></li>';
+		$nodes[] = array( 'tag' => $tag, 'slug' => $slug, 'text' => $text );
 	}
-	$toc = '<details class="toc" open><summary>' . esc_html__( 'Table of contents', 'amu' ) . '</summary><ol>' . $items . '</ol></details>';
+	if ( count( $nodes ) < 2 ) {
+		return $content;
+	}
+	// Nested list: H3 entries nest under the preceding H2 for a well-structured TOC.
+	$items = '';
+	$sub   = false;
+	foreach ( $nodes as $n ) {
+		$link = '<a href="#' . esc_attr( $n['slug'] ) . '">' . esc_html( $n['text'] ) . '</a>';
+		if ( 'h2' === $n['tag'] ) {
+			if ( $sub ) { $items .= '</ol>'; $sub = false; }
+			if ( '' !== $items ) { $items .= '</li>'; }
+			$items .= '<li>' . $link;
+		} else {
+			if ( ! $sub ) { $items .= '<ol class="toc-sub">'; $sub = true; }
+			$items .= '<li>' . $link . '</li>';
+		}
+	}
+	if ( $sub ) { $items .= '</ol>'; }
+	if ( '' !== $items ) { $items .= '</li>'; }
+	$toc = '<details class="toc" open><summary>' . esc_html__( 'Table of contents', 'amu' ) . '</summary><ol class="toc-list">' . $items . '</ol></details>';
 	$pos = stripos( $content, '</p>' );
 	return false !== $pos ? substr( $content, 0, $pos + 4 ) . $toc . substr( $content, $pos + 4 ) : $toc . $content;
 }
