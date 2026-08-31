@@ -18,7 +18,7 @@ if ( ! function_exists( 'amu_menu_fallback' ) ) {
 }
 ?>
 <!doctype html>
-<html <?php language_attributes(); ?> data-theme="dark">
+<html <?php language_attributes(); ?> data-theme="light">
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
