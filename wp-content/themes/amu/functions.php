@@ -18,6 +18,17 @@ require_once get_template_directory() . '/inc/watermark.php'; // logo + domain w
 require_once get_template_directory() . '/inc/homepage.php';  // news-portal homepage components
 require_once get_template_directory() . '/inc/calendar.php';  // anime airing calendar (daily-refreshed, DB-stored)
 
+/* -------------------------------------------------------------- media offload → static.animemangaupdates.com (Hetzner Storage Box) */
+define( 'AMU_CDN', 'https://static.animemangaupdates.com' ); // box serves wp-content/uploads at its root
+add_filter( 'upload_dir', function ( $d ) {
+	$d['baseurl'] = AMU_CDN;
+	$d['url']     = AMU_CDN . $d['subdir'];
+	return $d;
+} );
+add_filter( 'the_content', function ( $c ) {
+	return str_replace( 'https://animemangaupdates.com/wp-content/uploads', AMU_CDN, $c );
+}, 20 );
+
 /* -------------------------------------------------------------- setup */
 function amu_setup() {
 	add_theme_support( 'title-tag' );
