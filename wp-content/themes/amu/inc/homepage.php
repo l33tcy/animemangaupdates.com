@@ -186,10 +186,9 @@ function amu_hero_slider( $n = 5 ) {
 							: '<span class="ph"></span>';
 					?><span class="hs-scrim"></span></a>
 					<div class="hs-caption">
-						<span class="hs-eyebrow"><?php esc_html_e( 'Trending', 'amu' ); ?></span>
 						<?php if ( $k ) : ?><a class="hs-kicker" href="<?php echo esc_url( get_category_link( $k->term_id ) ); ?>" style="--tag:<?php echo esc_attr( amu_term_color( $k ) ); ?>"><?php echo esc_html( $k->name ); ?></a><?php endif; ?>
 						<h2 class="hs-title"><a href="<?php echo esc_url( get_permalink( $p ) ); ?>"><?php echo esc_html( get_the_title( $p ) ); ?></a></h2>
-						<p class="hs-excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt( $p ), 24 ) ); ?></p>
+						<time class="hs-date" datetime="<?php echo esc_attr( get_the_date( 'c', $p ) ); ?>"><?php echo esc_html( get_the_date( 'M j, Y', $p ) ); ?></time>
 					</div>
 				</article>
 			<?php $i++; endforeach; ?>
@@ -201,7 +200,6 @@ function amu_hero_slider( $n = 5 ) {
 				<button class="hs-dot<?php echo 0 === $d ? ' is-active' : ''; ?>" type="button" aria-label="<?php echo esc_attr( sprintf( /* translators: %d: slide number */ __( 'Go to slide %d', 'amu' ), $d + 1 ) ); ?>"></button>
 			<?php endfor; ?>
 		</div>
-		<div class="hs-progress"><span></span></div>
 	</section>
 	<?php
 }

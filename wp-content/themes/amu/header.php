@@ -35,9 +35,20 @@ if ( ! function_exists( 'amu_menu_fallback' ) ) {
 			<span class="ht-left" aria-hidden="true"></span>
 
 			<?php
-			// the_custom_logo() outputs its own <a> to home, so don't wrap it in another anchor.
-			if ( has_custom_logo() ) {
-				the_custom_logo();
+			// Two logo versions swap by theme (CSS): dark-letter wordmark for the light
+			// header, light-letter wordmark for the dark header.
+			$amu_light_logo = has_custom_logo() ? wp_get_attachment_image_url( get_theme_mod( 'custom_logo' ), 'full' ) : '';
+			if ( $amu_light_logo ) {
+				printf(
+					'<a class="custom-logo-link" href="%1$s" rel="home" aria-label="%2$s">' .
+						'<img class="custom-logo amu-logo-light" src="%3$s" alt="%2$s" decoding="async">' .
+						'<img class="custom-logo amu-logo-dark" src="%4$s" alt="" aria-hidden="true" decoding="async">' .
+					'</a>',
+					esc_url( home_url( '/' ) ),
+					esc_attr( get_bloginfo( 'name' ) ),
+					esc_url( $amu_light_logo ),
+					esc_url( get_template_directory_uri() . '/assets/logo-dark.png' )
+				);
 			} else {
 				printf(
 					'<a class="brand" href="%s" rel="home">%s</a>',
