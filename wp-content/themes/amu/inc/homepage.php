@@ -106,11 +106,9 @@ function amu_mark_seen( $ids ) {
  * category archive. Skips any post already shown elsewhere on the page.
  */
 function amu_category_block( $cat, $count = 5 ) {
-	$seen  =& amu_seen_ids();
 	$posts = get_posts( array(
 		'category'      => $cat->term_id,
 		'numberposts'   => $count,
-		'post__not_in'  => array_keys( $seen ),
 		'no_found_rows' => true,
 	) );
 	if ( empty( $posts ) ) {
