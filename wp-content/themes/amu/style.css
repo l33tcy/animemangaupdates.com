@@ -3,7 +3,7 @@ Theme Name: AnimeMangaUpdates
 Theme URI: https://animemangaupdates.com
 Description: Modern anime and manga news magazine theme, using the brand red and blue palette with solid colours, a full width Featured grid, animated mobile menu, collapsible table of contents and a full screen search with live suggestions. Yoast and ACF ready.
 Author: l33tcy
-Version: 7.7.0
+Version: 7.7.1
 Requires at least: 6.0
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
@@ -224,7 +224,12 @@ img.custom-logo { height: 84px !important; width: auto; max-height: 84px; displa
 .article-content h3 { font-family: var(--f-display); font-weight: 700; font-size: 23px; margin-top: 1.5em; }
 .article-content a { text-decoration: underline; text-decoration-color: var(--primary); text-underline-offset: 3px; }
 .article-content img { border-radius: 10px; }
-.article-content blockquote { border-left: 4px solid var(--secondary); margin: 1.5em 0; padding: 4px 22px; font-family: var(--f-display); font-size: 23px; line-height: 1.4; color: var(--ink); }
+.article-content blockquote:not([class*="twitter"]):not([class*="instagram"]):not([class*="tiktok"]) { border-left: 4px solid var(--secondary); margin: 1.5em 0; padding: 4px 22px; font-family: var(--f-display); font-size: 23px; line-height: 1.4; color: var(--ink); }
+/* Embeds (X/Twitter, Instagram, TikTok, video): always centered, full content width */
+.article-content .twitter-tweet, .article-content .twitter-tweet-rendered, .article-content .instagram-media, .article-content .tiktok-embed { margin-left: auto !important; margin-right: auto !important; float: none !important; border-left: 0; padding: 0; font-family: inherit; font-size: inherit; line-height: inherit; }
+.article-content .twitter-tweet { width: 100% !important; max-width: 550px !important; }
+.article-content iframe, .article-content .wp-block-embed__wrapper iframe { display: block; margin: 1.7em auto; max-width: 100%; }
+.article-content iframe[src*="youtube"], .article-content iframe[src*="youtube-nocookie"], .article-content iframe[src*="vimeo"] { width: 100%; aspect-ratio: 16 / 9; height: auto; border-radius: 12px; }
 .article-content pre { background: var(--bg-2); border: 1px solid var(--line); padding: 18px; border-radius: 10px; overflow: auto; font-size: 15px; }
 .article-content .table-wrap { overflow-x: auto; margin: 1.7em 0; border: 1.5px solid var(--line); border-radius: var(--radius); }
 .article-content table { width: 100%; border-collapse: collapse; font-size: 16px; margin: 0; }
