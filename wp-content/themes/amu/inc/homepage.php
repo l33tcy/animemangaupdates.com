@@ -165,6 +165,78 @@ function amu_category_blocks( $max = 0 ) {
 	echo '</div>';
 }
 
+/** One horizontal editorial row (Game Informer style): thumb + coloured kicker + headline + excerpt + date. */
+function amu_editorial_row( $post ) {
+	$cats = get_the_category( $post->ID );
+	$kick = ! empty( $cats ) ? $cats[0] : null;
+	?>
+	<article class="ed-row">
+		<a class="ed-thumb" href="<?php echo esc_url( get_permalink( $post ) ); ?>" tabindex="-1" aria-hidden="true"><?php
+			echo has_post_thumbnail( $post )
+				? get_the_post_thumbnail( $post, 'amu_card', array( 'loading' => 'lazy', 'alt' => '' ) ) // phpcs:ignore
+				: '<span class="ph"></span>';
+		?></a>
+		<div class="ed-body">
+			<?php if ( $kick ) : ?>
+				<a class="ed-kicker" href="<?php echo esc_url( get_category_link( $kick->term_id ) ); ?>" style="--tag:<?php echo esc_attr( amu_term_color( $kick ) ); ?>"><?php echo esc_html( $kick->name ); ?></a>
+			<?php endif; ?>
+			<h3 class="ed-title"><a href="<?php echo esc_url( get_permalink( $post ) ); ?>"><?php echo esc_html( get_the_title( $post ) ); ?></a></h3>
+			<p class="ed-excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt( $post ), 26 ) ); ?></p>
+			<div class="ed-meta"><time datetime="<?php echo esc_attr( get_the_date( 'c', $post ) ); ?>"><?php echo esc_html( get_the_date( 'M j, Y', $post ) ); ?></time></div>
+		</div>
+	</article>
+	<?php
+}
+
+/** A named-category editorial section: bold heading + "See all" + horizontal rows. */
+function amu_editorial_section( $slug, $count = 4 ) {
+	$cat = get_category_by_slug( $slug );
+	if ( ! $cat ) {
+		return;
+	}
+	$posts = get_posts( array( 'category' => $cat->term_id, 'numberposts' => $count, 'no_found_rows' => true ) );
+	if ( empty( $posts ) ) {
+		return;
+	}
+	$hid = 'ed-' . $cat->term_id;
+	?>
+	<section class="ed-section" aria-labelledby="<?php echo esc_attr( $hid ); ?>">
+		<div class="ed-head">
+			<h2 class="ed-h" id="<?php echo esc_attr( $hid ); ?>"><a href="<?php echo esc_url( get_category_link( $cat->term_id ) ); ?>"><?php echo esc_html( $cat->name ); ?></a></h2>
+			<a class="ed-all" href="<?php echo esc_url( get_category_link( $cat->term_id ) ); ?>"><?php esc_html_e( 'See all', 'amu' ); ?><span aria-hidden="true">&rarr;</span></a>
+		</div>
+		<div class="ed-list">
+			<?php foreach ( $posts as $p ) { amu_editorial_row( $p ); } ?>
+		</div>
+	</section>
+	<?php
+}
+
+/** "Popular" sidebar: small thumbnail + headline list, by tracked views. */
+function amu_popular_aside( $n = 5 ) {
+	$posts = amu_most_read( $n );
+	if ( empty( $posts ) ) {
+		return;
+	}
+	?>
+	<aside class="home-aside" aria-labelledby="pop-h">
+		<h2 class="ed-h" id="pop-h"><?php esc_html_e( 'Popular', 'amu' ); ?></h2>
+		<ol class="pop-list">
+			<?php foreach ( $posts as $p ) : ?>
+				<li class="pop-item">
+					<a class="pop-thumb" href="<?php echo esc_url( get_permalink( $p ) ); ?>" tabindex="-1" aria-hidden="true"><?php
+						echo has_post_thumbnail( $p )
+							? get_the_post_thumbnail( $p, 'thumbnail', array( 'loading' => 'lazy', 'alt' => '' ) ) // phpcs:ignore
+							: '<span class="ph"></span>';
+					?></a>
+					<h3 class="pop-title"><a href="<?php echo esc_url( get_permalink( $p ) ); ?>"><?php echo esc_html( get_the_title( $p ) ); ?></a></h3>
+				</li>
+			<?php endforeach; ?>
+		</ol>
+	</aside>
+	<?php
+}
+
 /** A plain headline list (title + timestamp), optional leading number/thumb. */
 function amu_headline_list( $posts, $numbered = false ) {
 	echo '<ul class="hl-list' . ( $numbered ? ' -num' : '' ) . '">';

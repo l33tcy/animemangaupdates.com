@@ -3,7 +3,7 @@ Theme Name: AnimeMangaUpdates
 Theme URI: https://animemangaupdates.com
 Description: Modern anime and manga news magazine theme, using the brand red and blue palette with solid colours, a full width Featured grid, animated mobile menu, collapsible table of contents and a full screen search with live suggestions. Yoast and ACF ready.
 Author: l33tcy
-Version: 7.7.2
+Version: 7.7.3
 Requires at least: 6.0
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
@@ -408,34 +408,41 @@ a.reveal-email.revealed { background: transparent; color: var(--primary); paddin
 .home-h1 { display: flex; align-items: center; gap: 10px; margin: 0; font-family: var(--f-label); font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); }
 .home-h1 .hm-mark { flex: none; width: 10px; height: 10px; border-radius: 2px; background: var(--primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 22%, transparent); }
 
-/* ============================================================ homepage: category cards (editorial, colour-accented, deduped) */
-.cat-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; margin: 8px 0 12px; }
-.cat-card { --tag: var(--secondary); display: flex; flex-direction: column; min-width: 0; background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--tag); border-radius: 14px; padding: 16px 16px 18px; transition: transform .2s ease, box-shadow .2s ease; }
-.cat-card:hover { transform: translateY(-3px); box-shadow: 0 24px 46px -30px rgba(0,0,0,.75); }
-.cat-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 15px; }
-.cat-card-name { margin: 0; font-family: var(--f-display); font-weight: 800; font-size: 20px; letter-spacing: -.02em; line-height: 1; }
-.cat-card-name a { color: var(--ink); display: inline-flex; align-items: center; gap: 9px; }
-.cat-card-name a::before { content: ""; width: 9px; height: 9px; border-radius: 2px; background: var(--tag); box-shadow: 0 0 0 4px color-mix(in srgb, var(--tag) 20%, transparent); }
-.cat-card-name a:hover { color: var(--tag); }
-.cat-card-all { flex: none; white-space: nowrap; font-family: var(--f-label); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); display: inline-flex; align-items: center; gap: 5px; }
-.cat-card-all span { transition: transform .2s ease; }
-.cat-card-all:hover { color: var(--tag); }
-.cat-card-all:hover span { transform: translateX(3px); }
-.cat-lead { margin: 0; }
-.cat-lead-media { display: block; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; background: var(--panel-2); }
-.cat-lead-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
-.cat-lead-media .ph { display: block; width: 100%; height: 100%; background: linear-gradient(135deg, var(--panel-2), var(--panel)); }
-.cat-card:hover .cat-lead-media img { transform: scale(1.04); }
-.cat-kicker { display: inline-block; margin: 13px 0 6px; font-family: var(--f-label); font-weight: 700; font-size: 10.5px; text-transform: uppercase; letter-spacing: .1em; color: var(--tag); }
-.cat-lead-title { margin: 0 0 7px; font-family: var(--f-display); font-weight: 800; font-size: 19px; line-height: 1.18; letter-spacing: -.015em; text-wrap: balance; }
-.cat-lead-title a { color: var(--ink); } .cat-lead-title a:hover { color: var(--tag); }
-.cat-time { font-family: var(--f-label); font-size: 11px; letter-spacing: .04em; color: var(--muted); }
-.cat-more { list-style: none; margin: 15px 0 0; padding: 0; }
-.cat-more-item { display: flex; flex-direction: column; gap: 4px; padding: 11px 0; border-top: 1px solid var(--line); }
-.cat-more-item:first-child { border-top: 0; padding-top: 2px; }
-.cat-more-link { color: var(--ink); font-family: var(--f-display); font-weight: 700; font-size: 14px; line-height: 1.32; }
-.cat-more-link:hover { color: var(--tag); }
-@media (max-width: 560px) { .cat-cards { grid-template-columns: 1fr; } }
+/* ============================================================ homepage: editorial layout (main rows + Popular aside) */
+.home-grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 48px; align-items: start; margin-top: 6px; }
+.home-main { min-width: 0; }
+.ed-section { margin-bottom: 40px; }
+.ed-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+.ed-h { margin: 0; font-family: var(--f-display); font-weight: 800; font-size: 34px; letter-spacing: -.03em; line-height: 1; }
+.ed-h a { color: var(--ink); } .ed-h a:hover { color: var(--secondary); }
+.ed-all { flex: none; white-space: nowrap; font-family: var(--f-label); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--secondary); display: inline-flex; align-items: center; gap: 5px; }
+.ed-all span { transition: transform .2s ease; }
+.ed-all:hover span { transform: translateX(3px); }
+.ed-list { display: flex; flex-direction: column; }
+.ed-row { display: grid; grid-template-columns: 300px 1fr; gap: 26px; padding: 26px 0; border-top: 1px solid var(--line); }
+.ed-row:first-child { border-top: 0; padding-top: 2px; }
+.ed-thumb { display: block; aspect-ratio: 16 / 10; border-radius: 10px; overflow: hidden; background: var(--panel-2); }
+.ed-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.ed-thumb .ph { display: block; width: 100%; height: 100%; background: linear-gradient(135deg, var(--panel-2), var(--panel)); }
+.ed-row:hover .ed-thumb img { transform: scale(1.04); }
+.ed-body { min-width: 0; align-self: center; }
+.ed-kicker { --tag: var(--secondary); display: inline-block; margin-bottom: 10px; padding: 4px 9px; border-radius: 5px; background: var(--tag); color: #fff; font-family: var(--f-label); font-weight: 700; font-size: 10.5px; text-transform: uppercase; letter-spacing: .07em; }
+.ed-title { margin: 0 0 9px; font-family: var(--f-display); font-weight: 800; font-size: 25px; line-height: 1.14; letter-spacing: -.02em; text-wrap: balance; }
+.ed-title a { color: var(--ink); } .ed-title a:hover { color: var(--secondary); }
+.ed-excerpt { margin: 0 0 12px; font-family: var(--f-body); font-size: 15.5px; line-height: 1.55; color: var(--muted); }
+.ed-meta { font-family: var(--f-label); font-size: 12px; letter-spacing: .03em; color: var(--muted); }
+.home-aside { position: sticky; top: calc(var(--nav-h) + 18px); }
+.home-aside .ed-h { font-size: 30px; margin-bottom: 14px; }
+.pop-list { list-style: none; margin: 0; padding: 0; }
+.pop-item { display: grid; grid-template-columns: 74px 1fr; gap: 14px; align-items: center; padding: 15px 0; border-top: 1px solid var(--line); }
+.pop-item:first-child { border-top: 0; padding-top: 2px; }
+.pop-thumb { display: block; width: 74px; height: 74px; border-radius: 8px; overflow: hidden; background: var(--panel-2); }
+.pop-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.pop-thumb .ph { display: block; width: 100%; height: 100%; }
+.pop-title { margin: 0; font-family: var(--f-display); font-weight: 800; font-size: 15px; line-height: 1.22; }
+.pop-title a { color: var(--ink); } .pop-title a:hover { color: var(--secondary); }
+@media (max-width: 900px) { .home-grid { grid-template-columns: 1fr; gap: 36px; } .home-aside { position: static; } }
+@media (max-width: 560px) { .ed-row { grid-template-columns: 1fr; gap: 14px; } .ed-h { font-size: 28px; } .ed-title { font-size: 20px; } }
 
 /* ============================================================ homepage: news columns + trending */
 .news-cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; margin-bottom: 10px; align-items: start; }
