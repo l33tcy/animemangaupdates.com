@@ -1,26 +1,25 @@
 <?php
 /**
- * 404 — fully self-contained (no get_header/get_footer, no design-system stylesheet)
- * so it renders correctly even if style.css or the theme chrome fails to load.
- * Sends a real 404 status for crawlers.
+ * WordPress fatal-error drop-in — the custom HTTP 500 ("critical error") page.
  *
- * @package amu
+ * WordPress includes this file automatically when its shutdown handler catches a
+ * fatal PHP error, in place of the default "There has been a critical error"
+ * screen. It MUST be fully self-contained: no theme, no design-system stylesheet,
+ * and no WordPress functions (the app has already crashed by the time we get here).
  */
 
 if ( ! headers_sent() ) {
-	status_header( 404 );
-	nocache_headers();
+	header( 'HTTP/1.1 500 Internal Server Error' );
+	header( 'Content-Type: text/html; charset=utf-8' );
+	header( 'Retry-After: 120' );
 }
-$amu_home   = esc_url( home_url( '/' ) );
-$amu_search = esc_url( home_url( '/?s=' ) );
-$amu_name   = esc_html( get_bloginfo( 'name' ) );
 ?><!doctype html>
-<html lang="<?php echo esc_attr( get_bloginfo( 'language' ) ); ?>">
+<html lang="en">
 <head>
-<meta charset="<?php echo esc_attr( get_bloginfo( 'charset' ) ); ?>">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, follow">
-<title>404: Page not found | <?php echo $amu_name; ?></title>
+<meta name="robots" content="noindex, nofollow">
+<title>Temporarily unavailable | AnimeMangaUpdates</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&display=swap" rel="stylesheet">
@@ -37,7 +36,7 @@ $amu_name   = esc_html( get_bloginfo( 'name' ) );
   h1 { font-weight:800; font-size:clamp(24px, 4.5vw, 36px); letter-spacing:-.02em; margin:12px 0 10px; }
   .msg { color:var(--muted); font-size:17px; line-height:1.6; margin:0 auto 30px; max-width:470px; }
   .actions { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
-  .btn { display:inline-flex; align-items:center; height:48px; padding:0 22px; border-radius:11px; font-weight:800; font-size:15px; text-decoration:none; border:1.5px solid var(--line); color:var(--ink); transition:border-color .15s, background .15s, transform .15s; }
+  .btn { display:inline-flex; align-items:center; height:48px; padding:0 22px; border-radius:11px; font-weight:800; font-size:15px; text-decoration:none; border:1.5px solid var(--line); color:var(--ink); transition:border-color .15s, background .15s, transform .15s; cursor:pointer; background:none; }
   .btn:hover { transform:translateY(-2px); border-color:var(--ink); }
   .btn-primary { background:var(--red); border-color:var(--red); color:#fff; }
   .btn-primary:hover { background:#e0202f; border-color:#e0202f; }
@@ -45,16 +44,14 @@ $amu_name   = esc_html( get_bloginfo( 'name' ) );
 </head>
 <body>
   <main class="wrap">
-    <p class="brand"><?php echo $amu_name; ?></p>
-    <p class="code">404</p>
-    <h1>This page wandered off.</h1>
-    <p class="msg">The page you are looking for is not here. It may have moved, or the link that brought you here is broken.</p>
+    <p class="brand">AnimeMangaUpdates</p>
+    <p class="code">500</p>
+    <h1>Something went wrong on our end.</h1>
+    <p class="msg">We hit an unexpected error while loading this page. It is not you, it is us. Please try again in a few moments.</p>
     <div class="actions">
-      <a class="btn btn-primary" href="<?php echo $amu_home; ?>">Back to home</a>
-      <a class="btn" href="<?php echo $amu_search; ?>">Search the site</a>
+      <button class="btn btn-primary" type="button" onclick="location.reload()">Try again</button>
+      <a class="btn" href="/">Go to homepage</a>
     </div>
   </main>
 </body>
 </html>
-<?php
-exit;

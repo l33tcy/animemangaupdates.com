@@ -27,6 +27,9 @@ RUN set -eux; mkdir -p /opt/amu-seed/plugins; \
 # Git-deployed: the theme (refreshed from the image on every start).
 COPY wp-content/themes/amu/ /opt/amu-theme/amu/
 
+# Git-deployed: custom HTTP 500 drop-in (entrypoint copies it into wp-content/).
+COPY wp-content/php-error.php /opt/amu-seed/php-error.php
+
 RUN printf 'upload_max_filesize = 64M\npost_max_size = 64M\nmemory_limit = 256M\nmax_execution_time = 120\n' \
     > /usr/local/etc/php/conf.d/amu-limits.ini
 

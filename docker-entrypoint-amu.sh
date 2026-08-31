@@ -26,6 +26,9 @@ fi
 # THEME — always refreshed from the image (git is the source of truth).
 cp -a /opt/amu-theme/amu/. "$WPC/themes/amu/"
 
+# DROP-IN — custom fatal-error (HTTP 500) page, refreshed from the image each start.
+[ -f /opt/amu-seed/php-error.php ] && cp -a /opt/amu-seed/php-error.php "$WPC/php-error.php"
+
 # PLUGINS — seed ACF + Yoast ONCE (only if missing), then leave them to the site
 # so wp-admin updates persist across deploys.
 for p in advanced-custom-fields wordpress-seo; do
