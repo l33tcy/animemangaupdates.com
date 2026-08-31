@@ -84,48 +84,74 @@ function amu_hero_mosaic() {
 	echo '</section>';
 }
 
-/** One category block: blue header tab, featured lead, headline list, "More". */
-function amu_category_block( $cat, $count = 4 ) {
-	$posts = get_posts( array( 'category' => $cat->term_id, 'numberposts' => $count, 'no_found_rows' => true ) );
+/**
+ * Page-scoped register of post IDs already shown, so no story is repeated across
+ * the hero and the category cards (deduped for crawlers + readers). Returned by
+ * reference so callers can read it directly.
+ */
+function &amu_seen_ids() {
+	static $ids = array();
+	return $ids;
+}
+function amu_mark_seen( $ids ) {
+	$s =& amu_seen_ids();
+	foreach ( (array) $ids as $id ) {
+		$s[ (int) $id ] = true;
+	}
+}
+
+/**
+ * One category card: colour-accented rule, linked <h2> heading, a featured lead
+ * (<article> + <h3>), and a headline list. Links "See all" to the paginated
+ * category archive. Skips any post already shown elsewhere on the page.
+ */
+function amu_category_block( $cat, $count = 5 ) {
+	$seen  =& amu_seen_ids();
+	$posts = get_posts( array(
+		'category'      => $cat->term_id,
+		'numberposts'   => $count,
+		'post__not_in'  => array_keys( $seen ),
+		'no_found_rows' => true,
+	) );
 	if ( empty( $posts ) ) {
 		return;
 	}
-	$link = get_category_link( $cat->term_id );
-	$lead = array_shift( $posts );
-	echo '<section class="cat-block">';
-	printf(
-		'<a class="cat-block-head" href="%s"><span class="cbh-name">%s</span><span class="cbh-arrows" aria-hidden="true">›››</span></a>',
-		esc_url( $link ),
-		esc_html( $cat->name )
-	);
-	printf(
-		'<a class="cat-block-lead" href="%s">%s</a>',
-		esc_url( get_permalink( $lead ) ),
-		has_post_thumbnail( $lead ) ? get_the_post_thumbnail( $lead, 'amu_card', array( 'loading' => 'lazy', 'alt' => esc_attr( get_the_title( $lead ) ) ) ) : '<span class="ph"></span>'
-	);
-	printf(
-		'<h3 class="cat-block-title"><a href="%s">%s</a></h3><div class="cb-stamp">%s</div>',
-		esc_url( get_permalink( $lead ) ),
-		esc_html( get_the_title( $lead ) ),
-		esc_html( amu_stamp( $lead ) )
-	);
-	if ( $posts ) {
-		echo '<ul class="cat-block-list">';
-		foreach ( $posts as $p ) {
-			printf(
-				'<li><a href="%s">%s</a><span class="cb-stamp">%s</span></li>',
-				esc_url( get_permalink( $p ) ),
-				esc_html( get_the_title( $p ) ),
-				esc_html( amu_stamp( $p ) )
-			);
-		}
-		echo '</ul>';
-	}
-	printf( '<a class="cat-block-more" href="%s">%s &rarr;</a>', esc_url( $link ), esc_html__( 'See all', 'amu' ) );
-	echo '</section>';
+	$color = amu_term_color( $cat );
+	$link  = get_category_link( $cat->term_id );
+	$hid   = 'catcard-' . $cat->term_id;
+	$lead  = array_shift( $posts );
+	amu_mark_seen( $lead->ID );
+	?>
+	<section class="cat-card" style="--tag:<?php echo esc_attr( $color ); ?>" aria-labelledby="<?php echo esc_attr( $hid ); ?>">
+		<div class="cat-card-top">
+			<h2 class="cat-card-name" id="<?php echo esc_attr( $hid ); ?>"><a href="<?php echo esc_url( $link ); ?>"><?php echo esc_html( $cat->name ); ?></a></h2>
+			<a class="cat-card-all" href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'See all', 'amu' ); ?><span aria-hidden="true">&rarr;</span></a>
+		</div>
+		<article class="cat-lead">
+			<a class="cat-lead-media" href="<?php echo esc_url( get_permalink( $lead ) ); ?>" tabindex="-1" aria-hidden="true"><?php
+				echo has_post_thumbnail( $lead )
+					? get_the_post_thumbnail( $lead, 'amu_card', array( 'loading' => 'lazy', 'alt' => '' ) ) // phpcs:ignore
+					: '<span class="ph"></span>';
+			?></a>
+			<span class="cat-kicker"><?php echo esc_html( $cat->name ); ?></span>
+			<h3 class="cat-lead-title"><a href="<?php echo esc_url( get_permalink( $lead ) ); ?>"><?php echo esc_html( get_the_title( $lead ) ); ?></a></h3>
+			<time class="cat-time" datetime="<?php echo esc_attr( get_the_date( 'c', $lead ) ); ?>"><?php echo esc_html( amu_stamp( $lead ) ); ?></time>
+		</article>
+		<?php if ( $posts ) : ?>
+			<ul class="cat-more">
+				<?php foreach ( $posts as $p ) : amu_mark_seen( $p->ID ); ?>
+					<li class="cat-more-item">
+						<a class="cat-more-link" href="<?php echo esc_url( get_permalink( $p ) ); ?>"><?php echo esc_html( get_the_title( $p ) ); ?></a>
+						<time class="cat-time" datetime="<?php echo esc_attr( get_the_date( 'c', $p ) ); ?>"><?php echo esc_html( amu_stamp( $p ) ); ?></time>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+		<?php endif; ?>
+	</section>
+	<?php
 }
 
-/** Row of category blocks. $max = 0 renders EVERY category that has posts (ordered by count); >0 caps it. */
+/** Grid of category cards. $max = 0 renders EVERY category that has posts (ordered by count); >0 caps it. */
 function amu_category_blocks( $max = 0 ) {
 	$args = array( 'orderby' => 'count', 'order' => 'DESC', 'hide_empty' => true, 'exclude' => array( 1 ) );
 	if ( $max > 0 ) {
@@ -135,7 +161,7 @@ function amu_category_blocks( $max = 0 ) {
 	if ( empty( $cats ) ) {
 		return;
 	}
-	echo '<div class="cat-blocks">';
+	echo '<div class="cat-cards">';
 	foreach ( $cats as $cat ) {
 		amu_category_block( $cat );
 	}
@@ -221,9 +247,12 @@ function amu_related_posts( $count = 3 ) {
 	wp_reset_postdata();
 }
 
-/** Minimal "Most read" list — big faint numbers + bold titles, two columns. */
+/** Minimal "Most read" list — big faint numbers + bold titles, two columns. Deduped against the hero/category cards. */
 function amu_most_read_section() {
-	$posts = amu_most_read( 6 );
+	$seen  =& amu_seen_ids();
+	$posts = amu_most_read( 12 );
+	$posts = array_values( array_filter( $posts, function ( $p ) use ( $seen ) { return ! isset( $seen[ $p->ID ] ); } ) );
+	$posts = array_slice( $posts, 0, 6 );
 	if ( empty( $posts ) ) {
 		return;
 	}

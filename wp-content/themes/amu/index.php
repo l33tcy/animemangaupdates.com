@@ -13,39 +13,26 @@ $is_front = ( is_home() || is_front_page() ) && ! is_paged();
 
 	<?php if ( $is_front && have_posts() ) : ?>
 
-		<?php // ---- HERO: big lead + two secondary, titles overlaid ---- ?>
-		<section class="mhero">
+		<?php // ---- MASTHEAD: single H1 stating the page topic for crawlers ---- ?>
+		<header class="home-masthead">
+			<h1 class="home-h1"><span class="hm-mark" aria-hidden="true"></span><?php echo esc_html( get_bloginfo( 'name' ) ); ?>: <?php esc_html_e( 'Anime & Manga News, Releases & Guides', 'amu' ); ?></h1>
+		</header>
+
+		<?php // ---- HERO: big lead + two secondary; these stories are registered so the cards below never repeat them ---- ?>
+		<section class="mhero" aria-label="<?php esc_attr_e( 'Top stories', 'amu' ); ?>">
 			<?php
 			$i = 0;
 			while ( have_posts() && $i < 3 ) :
 				the_post();
+				amu_mark_seen( get_the_ID() );
 				amu_overlay_card( get_post(), 0 === $i ? 'amu_hero' : 'amu_card', 0 === $i ? 'mh-lead' : 'mh-side' );
 				$i++;
 			endwhile;
 			?>
 		</section>
 
-		<?php // ---- LATEST: clean card grid of everything remaining ---- ?>
-		<?php if ( have_posts() ) : ?>
-			<div class="mhead">
-				<h2><?php esc_html_e( 'Latest', 'amu' ); ?></h2>
-				<a class="mhead-all" href="<?php echo esc_url( get_permalink( get_option( 'page_for_posts' ) ) ?: home_url( '/' ) ); ?>"><?php esc_html_e( 'See all', 'amu' ); ?> &rarr;</a>
-			</div>
-			<div class="card-grid">
-				<?php
-				while ( have_posts() ) :
-					the_post();
-					get_template_part( 'template-parts/content', 'card', array( 'lead' => false ) );
-				endwhile;
-				?>
-			</div>
-		<?php endif; ?>
-
-		<?php // ---- CATEGORY BLOCKS: every category, each links "See all" to its paginated archive ---- ?>
-		<section class="home-cats">
-			<div class="mhead"><h2><?php esc_html_e( 'Browse by category', 'amu' ); ?></h2></div>
-			<?php amu_category_blocks(); ?>
-		</section>
+		<?php // ---- CATEGORY CARDS: one <section> per category (deduped); each "See all" -> its paginated archive ---- ?>
+		<?php amu_category_blocks(); ?>
 
 		<?php amu_most_read_section(); ?>
 
