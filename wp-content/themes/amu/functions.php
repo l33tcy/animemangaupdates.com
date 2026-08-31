@@ -240,21 +240,34 @@ function amu_nav_controls() {
 	<?php
 }
 
-/** Next post URL for continuous reading (older adjacent post, else latest other post). */
-function amu_next_post_url() {
-	$prev = get_previous_post();
-	if ( $prev instanceof WP_Post ) {
-		return get_permalink( $prev );
+/** Previous/Next post navigation (older + newer), each with title and excerpt. */
+function amu_post_nav() {
+	$prev = get_previous_post(); // older
+	$next = get_next_post();     // newer
+	if ( ! ( $prev instanceof WP_Post ) && ! ( $next instanceof WP_Post ) ) {
+		return;
 	}
-	$ids = get_posts( array(
-		'numberposts'  => 1,
-		'post__not_in' => array( get_the_ID() ),
-		'orderby'      => 'date',
-		'order'        => 'DESC',
-		'fields'       => 'ids',
-		'no_found_rows' => true,
-	) );
-	return $ids ? get_permalink( $ids[0] ) : '';
+	echo '<nav class="post-nav" aria-label="' . esc_attr__( 'More articles', 'amu' ) . '">';
+	amu_post_nav_card( $prev, __( 'Previous', 'amu' ), 'prev' );
+	amu_post_nav_card( $next, __( 'Next', 'amu' ), 'next' );
+	echo '</nav>';
+}
+
+/** One prev/next card (empty placeholder keeps the two-column layout balanced). */
+function amu_post_nav_card( $post, $label, $dir ) {
+	if ( ! ( $post instanceof WP_Post ) ) {
+		echo '<span class="pnav-empty" aria-hidden="true"></span>';
+		return;
+	}
+	$excerpt = get_the_excerpt( $post );
+	printf(
+		'<a class="pnav-card pnav-%1$s" href="%2$s"><span class="pnav-dir">%3$s</span><span class="pnav-title">%4$s</span><span class="pnav-ex">%5$s</span></a>',
+		esc_attr( $dir ),
+		esc_url( get_permalink( $post ) ),
+		esc_html( 'prev' === $dir ? '← ' . $label : $label . ' →' ),
+		esc_html( get_the_title( $post ) ),
+		esc_html( wp_trim_words( $excerpt, 22 ) )
+	);
 }
 
 /** Google News follow callout (shown on single posts only). */

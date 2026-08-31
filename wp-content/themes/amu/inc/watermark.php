@@ -161,6 +161,20 @@ function amu_watermark_on_upload( $upload ) {
 add_filter( 'wp_handle_upload', 'amu_watermark_on_upload' );
 add_filter( 'wp_handle_sideload', 'amu_watermark_on_upload' );
 
+/** Brand assets (logo, footer logo, favicon) must never be watermarked. */
+function amu_watermark_excluded( $id ) {
+	$id = (int) $id;
+	if ( ! $id ) {
+		return false;
+	}
+	$brand = array_filter( array(
+		(int) get_theme_mod( 'custom_logo' ),
+		(int) get_theme_mod( 'amu_footer_logo' ),
+		(int) get_option( 'site_icon' ),
+	) );
+	return in_array( $id, $brand, true );
+}
+
 /** Flag freshly-uploaded images so the back-fill command doesn't re-stamp them. */
 add_action( 'add_attachment', function ( $id ) {
 	if ( wp_attachment_is_image( $id ) ) {
@@ -187,6 +201,10 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		$skip = 0;
 		$fail = 0;
 		foreach ( $ids as $id ) {
+			if ( amu_watermark_excluded( $id ) ) { // never stamp logo / footer logo / favicon.
+				$skip++;
+				continue;
+			}
 			if ( ! $force && get_post_meta( $id, '_amu_watermarked', true ) ) {
 				$skip++;
 				continue;
