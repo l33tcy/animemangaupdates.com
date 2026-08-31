@@ -120,7 +120,6 @@ function amu_category_block( $cat, $count = 5 ) {
 	$link  = get_category_link( $cat->term_id );
 	$hid   = 'catcard-' . $cat->term_id;
 	$lead  = array_shift( $posts );
-	amu_mark_seen( $lead->ID );
 	?>
 	<section class="cat-card" style="--tag:<?php echo esc_attr( $color ); ?>" aria-labelledby="<?php echo esc_attr( $hid ); ?>">
 		<div class="cat-card-top">
@@ -139,7 +138,7 @@ function amu_category_block( $cat, $count = 5 ) {
 		</article>
 		<?php if ( $posts ) : ?>
 			<ul class="cat-more">
-				<?php foreach ( $posts as $p ) : amu_mark_seen( $p->ID ); ?>
+				<?php foreach ( $posts as $p ) : ?>
 					<li class="cat-more-item">
 						<a class="cat-more-link" href="<?php echo esc_url( get_permalink( $p ) ); ?>"><?php echo esc_html( get_the_title( $p ) ); ?></a>
 						<time class="cat-time" datetime="<?php echo esc_attr( get_the_date( 'c', $p ) ); ?>"><?php echo esc_html( amu_stamp( $p ) ); ?></time>
