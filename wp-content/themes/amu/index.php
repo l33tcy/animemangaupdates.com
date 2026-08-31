@@ -1,7 +1,7 @@
 <?php
 /**
- * Home / blog index. Front page: mosaic hero → category blocks → news columns
- * (Most read / Latest / Trending). Paged/blog views: a simple grid.
+ * Home / blog index. Front page (minimal): overlay hero → Latest grid → Most read.
+ * Paged/blog views: a simple grid.
  *
  * @package amu
  */
@@ -13,23 +13,42 @@ $is_front = ( is_home() || is_front_page() ) && ! is_paged();
 
 	<?php if ( $is_front && have_posts() ) : ?>
 
-		<nav class="cat-pills" aria-label="<?php esc_attr_e( 'Browse categories', 'amu' ); ?>">
-			<?php foreach ( amu_top_categories( 8 ) as $cat ) : ?>
-				<a href="<?php echo esc_url( get_category_link( $cat->term_id ) ); ?>" style="--pill:<?php echo esc_attr( amu_term_color( $cat ) ); ?>"><?php echo esc_html( $cat->name ); ?></a>
-			<?php endforeach; ?>
-		</nav>
+		<?php // ---- HERO: big lead + two secondary, titles overlaid ---- ?>
+		<section class="mhero">
+			<?php
+			$i = 0;
+			while ( have_posts() && $i < 3 ) :
+				the_post();
+				amu_overlay_card( get_post(), 0 === $i ? 'amu_hero' : 'amu_card', 0 === $i ? 'mh-lead' : 'mh-side' );
+				$i++;
+			endwhile;
+			?>
+		</section>
 
-		<?php amu_hero_mosaic(); ?>
+		<?php // ---- LATEST: clean card grid of everything remaining ---- ?>
+		<?php if ( have_posts() ) : ?>
+			<div class="mhead">
+				<h2><?php esc_html_e( 'Latest', 'amu' ); ?></h2>
+				<a class="mhead-all" href="<?php echo esc_url( get_permalink( get_option( 'page_for_posts' ) ) ?: home_url( '/' ) ); ?>"><?php esc_html_e( 'See all', 'amu' ); ?> &rarr;</a>
+			</div>
+			<div class="card-grid">
+				<?php
+				while ( have_posts() ) :
+					the_post();
+					get_template_part( 'template-parts/content', 'card', array( 'lead' => false ) );
+				endwhile;
+				?>
+			</div>
+			<nav class="pagination" aria-label="<?php esc_attr_e( 'Posts', 'amu' ); ?>">
+				<?php echo wp_kses_post( paginate_links( array( 'mid_size' => 1, 'prev_text' => '←', 'next_text' => '→' ) ) ); ?>
+			</nav>
+		<?php endif; ?>
 
-		<div class="section-head"><span class="sec-dot"></span><h2><?php esc_html_e( 'By category', 'amu' ); ?></h2><span class="bar"></span></div>
-		<?php amu_category_blocks( 4 ); ?>
-
-		<div class="section-head"><span class="sec-dot"></span><h2><?php esc_html_e( 'Newsroom', 'amu' ); ?></h2><span class="bar"></span></div>
-		<?php amu_news_section(); ?>
+		<?php amu_most_read_section(); ?>
 
 	<?php else : ?>
 
-		<div class="section-head"><span class="sec-dot"></span><h2><?php esc_html_e( 'Latest', 'amu' ); ?></h2><span class="bar"></span></div>
+		<div class="mhead"><h2><?php esc_html_e( 'Latest', 'amu' ); ?></h2></div>
 
 		<?php if ( have_posts() ) : ?>
 			<div class="card-grid">

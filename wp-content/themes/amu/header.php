@@ -32,12 +32,7 @@ if ( ! function_exists( 'amu_menu_fallback' ) ) {
 <header class="site-header">
 	<div class="header-top">
 		<div class="wrap header-top-inner">
-			<div class="ht-left">
-				<button class="search-pill js-search-open" aria-label="<?php esc_attr_e( 'Search', 'amu' ); ?>">
-					<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-					<span><?php esc_html_e( 'Search…', 'amu' ); ?></span>
-				</button>
-			</div>
+			<span class="ht-left" aria-hidden="true"></span>
 
 			<?php
 			// the_custom_logo() outputs its own <a> to home, so don't wrap it in another anchor.
@@ -53,6 +48,9 @@ if ( ! function_exists( 'amu_menu_fallback' ) ) {
 			?>
 
 			<div class="ht-right nav-actions">
+				<button class="icon-btn js-search-open" aria-label="<?php esc_attr_e( 'Search', 'amu' ); ?>">
+					<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+				</button>
 				<?php amu_theme_switch(); ?>
 				<button class="icon-btn nav-burger js-drawer-open" aria-label="<?php esc_attr_e( 'Menu', 'amu' ); ?>">
 					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>

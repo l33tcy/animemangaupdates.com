@@ -162,6 +162,28 @@ function amu_headline_list( $posts, $numbered = false ) {
 	echo '</ul>';
 }
 
+/** Minimal "Most read" list — big faint numbers + bold titles, two columns. */
+function amu_most_read_section() {
+	$posts = amu_most_read( 6 );
+	if ( empty( $posts ) ) {
+		return;
+	}
+	echo '<div class="mhead"><h2>' . esc_html__( 'Most read', 'amu' ) . '</h2></div>';
+	echo '<ol class="read-list">';
+	$i = 0;
+	foreach ( $posts as $p ) {
+		$i++;
+		printf(
+			'<li><a href="%s"><span class="rl-num">%02d</span><span class="rl-body"><span class="rl-title">%s</span><span class="rl-stamp">%s</span></span></a></li>',
+			esc_url( get_permalink( $p ) ),
+			$i,
+			esc_html( get_the_title( $p ) ),
+			esc_html( amu_stamp( $p ) )
+		);
+	}
+	echo '</ol>';
+}
+
 /** Three-column news section: Latest + Most read + Trending (blue card). */
 function amu_news_section() {
 	$latest = get_posts( array( 'numberposts' => 6, 'no_found_rows' => true ) );
