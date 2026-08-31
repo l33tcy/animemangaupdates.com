@@ -442,13 +442,37 @@ function amu_add_toc( $content ) {
 }
 add_filter( 'the_content', 'amu_add_toc', 9 );
 
-/** Wrap article tables in a scroll container so wide tables stay responsive. */
+/** Semantic, responsive tables: add scope to header cells, wrap in a scroll container (better a11y + SEO than a JS table plugin). */
 add_filter( 'the_content', function ( $content ) {
 	if ( ! is_singular( 'post' ) || false === stripos( $content, '<table' ) ) {
 		return $content;
 	}
+	// Header cells become explicit column headers for assistive tech + search engines.
+	$content = preg_replace( '/<th(?![^>]*\bscope=)/i', '<th scope="col"', $content );
 	return preg_replace( '/<table\b.*?<\/table>/is', '<div class="table-wrap">$0</div>', $content );
 }, 11 );
+
+/** External links open in a new tab with rel="nofollow noopener noreferrer"; internal (animemangaupdates.com) links untouched. */
+add_filter( 'the_content', function ( $content ) {
+	if ( false === stripos( $content, '<a ' ) ) {
+		return $content;
+	}
+	$host = wp_parse_url( home_url(), PHP_URL_HOST );
+	return preg_replace_callback(
+		'/<a\b([^>]*?)\shref=(["\'])(https?:\/\/[^"\']+)\2([^>]*)>/i',
+		function ( $m ) use ( $host ) {
+			$url_host = wp_parse_url( html_entity_decode( $m[3] ), PHP_URL_HOST );
+			// Same domain or any *.animemangaupdates.com subdomain counts as internal.
+			if ( $url_host && ( 0 === strcasecmp( $url_host, $host ) || preg_match( '/(^|\.)' . preg_quote( $host, '/' ) . '$/i', $url_host ) ) ) {
+				return $m[0];
+			}
+			$rest = preg_replace( '/\s(?:target|rel)\s*=\s*(["\']).*?\1/i', '', $m[1] . ' ' . $m[4] );
+			$rest = trim( preg_replace( '/\s+/', ' ', $rest ) );
+			return '<a href=' . $m[2] . $m[3] . $m[2] . ( '' !== $rest ? ' ' . $rest : '' ) . ' target="_blank" rel="nofollow noopener noreferrer">';
+		},
+		$content
+	);
+}, 12 );
 
 function amu_excerpt_length() { return 18; }
 add_filter( 'excerpt_length', 'amu_excerpt_length' );
