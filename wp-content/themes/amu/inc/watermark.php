@@ -154,7 +154,9 @@ function amu_watermark_file( $path ) {
  */
 function amu_watermark_on_upload( $upload ) {
 	if ( isset( $upload['type'], $upload['file'] ) && 0 === strpos( $upload['type'], 'image/' ) ) {
-		amu_watermark_file( $upload['file'] );
+		if ( amu_watermark_file( $upload['file'] ) ) {
+			$GLOBALS['amu_wm_stamped_paths'][ $upload['file'] ] = 1; // let add_attachment know it's done.
+		}
 	}
 	return $upload;
 }
@@ -175,9 +177,30 @@ function amu_watermark_excluded( $id ) {
 	return in_array( $id, $brand, true );
 }
 
-/** Flag freshly-uploaded images so the back-fill command doesn't re-stamp them. */
+/**
+ * Reliable stamping on attachment insert.
+ *
+ * Normal uploads are already stamped by the wp_handle_upload/sideload filter
+ * above, so we only record the flag. Attachments inserted directly (a script
+ * calling wp_insert_attachment, which bypasses those filters) never got a mark,
+ * so we stamp them here as a safety net and rebuild their sizes. This is why the
+ * old blanket flag was wrong: it marked direct inserts as done without stamping.
+ */
 add_action( 'add_attachment', function ( $id ) {
-	if ( wp_attachment_is_image( $id ) ) {
+	if ( ! wp_attachment_is_image( $id ) || amu_watermark_excluded( $id ) ) {
+		return;
+	}
+	$file = get_attached_file( $id );
+	if ( $file && ! empty( $GLOBALS['amu_wm_stamped_paths'][ $file ] ) ) {
+		update_post_meta( $id, '_amu_watermarked', 1 ); // stamped by the upload filter already.
+		return;
+	}
+	if ( $file && file_exists( $file ) && amu_watermark_file( $file ) ) {
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		$meta = wp_generate_attachment_metadata( $id, $file ); // rebuild thumbs from the stamped original.
+		if ( $meta && ! is_wp_error( $meta ) ) {
+			wp_update_attachment_metadata( $id, $meta );
+		}
 		update_post_meta( $id, '_amu_watermarked', 1 );
 	}
 } );
