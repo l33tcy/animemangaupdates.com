@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once get_template_directory() . '/inc/watermark.php'; // logo + domain watermark on uploads
 require_once get_template_directory() . '/inc/homepage.php';  // news-portal homepage components
+require_once get_template_directory() . '/inc/tierlist.php';  // [tierlist]/[tier] component for tier-list posts
 
 /* -------------------------------------------------------------- media offload → static.animemangaupdates.com (Hetzner Storage Box) */
 define( 'AMU_CDN', 'https://static.animemangaupdates.com' ); // box serves wp-content/uploads at its root
