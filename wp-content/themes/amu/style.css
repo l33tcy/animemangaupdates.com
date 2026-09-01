@@ -3,7 +3,7 @@ Theme Name: AnimeMangaUpdates
 Theme URI: https://animemangaupdates.com
 Description: Modern anime and manga news magazine theme, using the brand red and blue palette with solid colours, a full width Featured grid, animated mobile menu, collapsible table of contents and a full screen search with live suggestions. Yoast and ACF ready.
 Author: l33tcy
-Version: 7.7.9
+Version: 7.8.0
 Requires at least: 6.0
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
@@ -614,3 +614,16 @@ a.reveal-email.revealed { background: transparent; color: var(--primary); paddin
 .amu-tier-chip:hover { border-color: var(--tier); transform: translateY(-1px); }
 .amu-tier-empty { display: inline-block; min-height: 20px; }
 @media (max-width: 560px) { .amu-tier-label { flex-basis: 60px; } .amu-tier-letter { font-size: 20px; } .amu-tier-chip { font-size: 13px; padding: 5px 10px; } }
+
+/* ============================================================ codes component ([codes]/[code]) */
+.amu-codes { margin: 26px 0; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--panel); box-shadow: var(--shadow); }
+.amu-codes-title { font-family: var(--f-display); font-weight: 800; font-size: 18px; padding: 14px 16px; background: var(--panel-2); border-bottom: 1px solid var(--line); }
+.amu-code { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-top: 1px solid var(--line); }
+.amu-code:first-of-type { border-top: 0; }
+.amu-code-val { font-family: var(--f-label); font-weight: 700; font-size: 15px; color: var(--ink); background: var(--bg-2); border: 1px dashed var(--line); border-radius: 8px; padding: 6px 10px; word-break: break-all; }
+.amu-code-reward { flex: 1 1 auto; font-family: var(--f-body); font-size: 14px; color: var(--muted); }
+.amu-code-copy { flex: 0 0 auto; cursor: pointer; font-family: var(--f-label); font-weight: 700; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #fff; background: var(--primary); border: 0; border-radius: 8px; padding: 8px 14px; transition: background .15s ease, transform .1s ease; }
+.amu-code-copy:hover { background: var(--primary-2); }
+.amu-code-copy:active { transform: translateY(1px); }
+.amu-code-copy.is-copied { background: #3bd16f; }
+@media (max-width: 560px) { .amu-code { flex-wrap: wrap; } .amu-code-reward { flex-basis: 100%; order: 3; } }

@@ -185,3 +185,32 @@
 
   start();
 })();
+
+/* code copy buttons ([codes]/[code] component) */
+(function () {
+  function fallbackCopy(text, done) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', '');
+    ta.style.position = 'absolute'; ta.style.left = '-9999px';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta); done();
+  }
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('.amu-code-copy');
+    if (!btn) return;
+    var code = btn.getAttribute('data-code') || '';
+    var flash = function () {
+      var old = btn.getAttribute('data-label') || btn.textContent;
+      btn.setAttribute('data-label', old);
+      btn.textContent = 'Copied!';
+      btn.classList.add('is-copied');
+      setTimeout(function () { btn.textContent = old; btn.classList.remove('is-copied'); }, 1500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(flash, function () { fallbackCopy(code, flash); });
+    } else {
+      fallbackCopy(code, flash);
+    }
+  });
+})();
