@@ -168,7 +168,7 @@ img.custom-logo { height: 132px !important; width: auto; max-height: 132px; }
 .search-suggest .s-kind { margin-left: auto; font-family: var(--f-label); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #7d93af; }
 .search-suggest .s-empty { color: #7d93af; padding: 12px 14px; }
 .search-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px; }
-.search-cols h3 { font-family: var(--f-display); font-weight: 800; font-size: 22px; text-transform: uppercase; letter-spacing: .01em; margin: 0 0 18px; }
+.search-cols .col-h { font-family: var(--f-display); font-weight: 800; font-size: 22px; text-transform: uppercase; letter-spacing: .01em; margin: 0 0 18px; }
 .trend, .history { list-style: none; margin: 0; padding: 0; }
 .trend li, .history li { margin-bottom: 14px; }
 .trend a, .history a { display: flex; align-items: center; gap: 12px; color: #fff; font-family: var(--f-display); font-weight: 800; font-size: 22px; text-transform: uppercase; letter-spacing: .01em; }

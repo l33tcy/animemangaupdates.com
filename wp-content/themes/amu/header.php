@@ -112,7 +112,7 @@ if ( ! function_exists( 'amu_menu_fallback' ) ) {
 
 		<div class="search-cols">
 			<div>
-				<h3><?php esc_html_e( 'Trending searches', 'amu' ); ?></h3>
+				<p class="col-h"><?php esc_html_e( 'Trending searches', 'amu' ); ?></p>
 				<ul class="trend">
 					<?php foreach ( amu_trending_terms( 8 ) as $term ) : ?>
 						<li><a href="<?php echo esc_url( home_url( '/?s=' . rawurlencode( $term->name ) ) ); ?>"><span class="sq" style="--sq:<?php echo esc_attr( amu_term_color( $term ) ); ?>"></span><?php echo esc_html( $term->name ); ?></a></li>
@@ -120,7 +120,7 @@ if ( ! function_exists( 'amu_menu_fallback' ) ) {
 				</ul>
 			</div>
 			<div>
-				<h3><?php esc_html_e( 'History', 'amu' ); ?></h3>
+				<p class="col-h"><?php esc_html_e( 'History', 'amu' ); ?></p>
 				<ul class="history" id="amuHistory"><li class="muted"><?php esc_html_e( 'No search history', 'amu' ); ?></li></ul>
 			</div>
 		</div>
