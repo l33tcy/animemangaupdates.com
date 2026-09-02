@@ -3,7 +3,7 @@ Theme Name: AnimeMangaUpdates
 Theme URI: https://animemangaupdates.com
 Description: Modern anime and manga news magazine theme, using the brand red and blue palette with solid colours, a full width Featured grid, animated mobile menu, collapsible table of contents and a full screen search with live suggestions. Yoast and ACF ready.
 Author: l33tcy
-Version: 7.8.1
+Version: 7.8.2
 Requires at least: 6.0
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
@@ -635,3 +635,17 @@ a.reveal-email.revealed { background: transparent; color: var(--primary); paddin
 .article-content figure { margin: 1.6em 0; }
 .article-content figure img { width: 100%; height: auto; border-radius: 10px; }
 .article-content figcaption { text-align: center; color: var(--muted); font-size: 13px; margin-top: 8px; }
+
+/* ============================================================ progressive image loading (blur-up fade) */
+/* placeholder tint so lazy images reserve a visible box before they decode */
+.amu-lazy,
+.card:not(.-lead) .card-thumb img,
+.article-content img:not(.wp-post-image) { background-color: var(--panel-2); }
+/* fade is gated on .amu-js: with JS off, images stay fully visible (never hidden) */
+.amu-js .amu-lazy,
+.amu-js .card:not(.-lead) .card-thumb img,
+.amu-js .article-content img:not(.wp-post-image) { opacity: 0; filter: blur(8px); transition: opacity .5s ease, filter .5s ease; }
+.amu-js .amu-lazy.is-loaded,
+.amu-js .card:not(.-lead) .card-thumb img.is-loaded,
+.amu-js .article-content img.is-loaded { opacity: 1; filter: none; }
+@media (prefers-reduced-motion: reduce) { .amu-js .amu-lazy, .amu-js .card .card-thumb img, .amu-js .article-content img { transition: none; filter: none; } }

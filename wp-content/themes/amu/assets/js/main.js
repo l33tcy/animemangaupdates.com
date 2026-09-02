@@ -214,3 +214,20 @@
     }
   });
 })();
+
+/* progressive image loading: blur-up fade-in reveal for lazy (non-LCP) images */
+(function () {
+  var d = document;
+  d.documentElement.classList.add('amu-js'); // enables the CSS fade; no-JS stays visible
+  function reveal(img) { img.classList.add('is-loaded'); }
+  function watch(img) {
+    if (img.complete && img.naturalWidth > 0) { reveal(img); return; } // cached: show at once
+    img.addEventListener('load', function () { reveal(img); }, { once: true });
+    img.addEventListener('error', function () { reveal(img); }, { once: true }); // never trap a broken img
+  }
+  function init() {
+    var imgs = d.querySelectorAll('.amu-lazy, .card:not(.-lead) .card-thumb img, .article-content img:not(.wp-post-image)');
+    for (var i = 0; i < imgs.length; i++) { watch(imgs[i]); }
+  }
+  if (d.readyState === 'loading') { d.addEventListener('DOMContentLoaded', init); } else { init(); }
+})();

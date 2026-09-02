@@ -18,6 +18,7 @@ require_once get_template_directory() . '/inc/watermark.php'; // logo + domain w
 require_once get_template_directory() . '/inc/homepage.php';  // news-portal homepage components
 require_once get_template_directory() . '/inc/tierlist.php';  // [tierlist]/[tier] component for tier-list posts
 require_once get_template_directory() . '/inc/codes.php';     // [codes]/[code] component with copy buttons
+require_once get_template_directory() . '/inc/lazy-images.php'; // blur-up progressive image loading
 
 /* -------------------------------------------------------------- media offload → static.animemangaupdates.com (Hetzner Storage Box) */
 define( 'AMU_CDN', 'https://static.animemangaupdates.com' ); // box serves wp-content/uploads at its root
