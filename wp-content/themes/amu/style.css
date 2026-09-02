@@ -649,3 +649,12 @@ a.reveal-email.revealed { background: transparent; color: var(--primary); paddin
 .amu-js .card:not(.-lead) .card-thumb img.is-loaded,
 .amu-js .article-content img.is-loaded { opacity: 1; filter: none; }
 @media (prefers-reduced-motion: reduce) { .amu-js .amu-lazy, .amu-js .card .card-thumb img, .amu-js .article-content img { transition: none; filter: none; } }
+
+/* Follow on Google (preferred source) callout */
+.gsource { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin: 30px 0 6px; padding: 20px 24px; border: 1.5px solid var(--line); border-radius: 14px; background: var(--panel); }
+.gsource-eyebrow { display: block; font-family: var(--f-label); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin-bottom: 6px; }
+.gsource-title { margin: 0; font-family: var(--f-display); font-weight: 800; font-size: 18px; line-height: 1.3; color: var(--ink); max-width: 46ch; }
+.gsource-btn { flex: none; display: inline-flex; align-items: center; gap: 10px; height: 46px; padding: 0 20px; border-radius: 12px; background: #fff; border: 1.5px solid #dbe1ea; color: #1a56db; font-family: var(--f-display); font-weight: 800; font-size: 15px; box-shadow: 0 2px 8px rgba(20,40,80,.08); transition: box-shadow .15s, transform .15s; }
+.gsource-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(20,40,80,.14); color: #1a56db; }
+.gsource-g { flex: none; }
+@media (max-width: 560px) { .gsource { padding: 18px; } .gsource-btn { width: 100%; justify-content: center; } }
