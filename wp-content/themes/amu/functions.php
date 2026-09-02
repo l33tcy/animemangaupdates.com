@@ -19,6 +19,7 @@ require_once get_template_directory() . '/inc/homepage.php';  // news-portal hom
 require_once get_template_directory() . '/inc/tierlist.php';  // [tierlist]/[tier] component for tier-list posts
 require_once get_template_directory() . '/inc/codes.php';     // [codes]/[code] component with copy buttons
 require_once get_template_directory() . '/inc/lazy-images.php'; // blur-up progressive image loading
+require_once get_template_directory() . '/inc/alt-text.php';   // dynamic alt-text fallbacks (a11y + image SEO)
 
 /* -------------------------------------------------------------- media offload → static.animemangaupdates.com (Hetzner Storage Box) */
 define( 'AMU_CDN', 'https://static.animemangaupdates.com' ); // box serves wp-content/uploads at its root
@@ -120,6 +121,22 @@ function amu_meta_keywords() {
 	}
 }
 add_action( 'wp_head', 'amu_meta_keywords', 1 );
+
+/* -------------------------------------------------------------- meta author / publisher */
+function amu_meta_author() {
+	$publisher = get_bloginfo( 'name' );
+	$author    = $publisher;
+	if ( is_singular() ) {
+		$obj = get_queried_object();
+		if ( $obj instanceof WP_Post ) {
+			$name = get_the_author_meta( 'display_name', $obj->post_author );
+			if ( $name ) { $author = $name; }
+		}
+	}
+	printf( "<meta name=\"author\" content=\"%s\">\n", esc_attr( $author ) );
+	printf( "<meta name=\"publisher\" content=\"%s\">\n", esc_attr( $publisher ) );
+}
+add_action( 'wp_head', 'amu_meta_author', 1 );
 
 /* -------------------------------------------------------------- presentation helpers */
 
