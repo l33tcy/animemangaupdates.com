@@ -834,15 +834,6 @@ add_action( 'created_term', 'amu_flush_term_rules', 10, 3 );
 add_action( 'edited_term',  'amu_flush_term_rules', 10, 3 );
 add_action( 'delete_term',  'amu_flush_term_rules', 10, 3 );
 
-// Noindex empty tag/category archives (e.g. a tag whose only post is still a draft),
-// so thin, contentless archive pages never get indexed. Populated archives stay indexable.
-add_filter( 'wpseo_robots_array', function ( $robots ) {
-	if ( ( is_tag() || is_category() ) && 0 === (int) ( isset( $GLOBALS['wp_query']->found_posts ) ? $GLOBALS['wp_query']->found_posts : 0 ) ) {
-		$robots['index'] = 'noindex';
-	}
-	return $robots;
-} );
-
 // Category & tag archives: 20 posts per page (the homepage uses its own queries).
 add_action( 'pre_get_posts', function ( $q ) {
 	if ( is_admin() || ! $q->is_main_query() ) {
