@@ -17,12 +17,15 @@ RUN set -eux; \
     curl -fsSL https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o /usr/local/bin/wp; \
     chmod +x /usr/local/bin/wp
 
-# Persisted plugins (real plugins, no bridges): Advanced Custom Fields + Yoast SEO.
+# Persisted plugins (real plugins, no bridges): Advanced Custom Fields + Yoast SEO
+# + Complianz (GDPR/CCPA cookie consent with Google Consent Mode v2).
 RUN set -eux; mkdir -p /opt/amu-seed/plugins; \
     curl -fsSL "https://downloads.wordpress.org/plugin/advanced-custom-fields.latest-stable.zip" -o /tmp/acf.zip; \
     unzip -oq /tmp/acf.zip -d /opt/amu-seed/plugins; rm -f /tmp/acf.zip; \
     curl -fsSL "https://downloads.wordpress.org/plugin/wordpress-seo.latest-stable.zip" -o /tmp/yoast.zip; \
-    unzip -oq /tmp/yoast.zip -d /opt/amu-seed/plugins; rm -f /tmp/yoast.zip
+    unzip -oq /tmp/yoast.zip -d /opt/amu-seed/plugins; rm -f /tmp/yoast.zip; \
+    curl -fsSL "https://downloads.wordpress.org/plugin/complianz-gdpr.latest-stable.zip" -o /tmp/cmplz.zip; \
+    unzip -oq /tmp/cmplz.zip -d /opt/amu-seed/plugins; rm -f /tmp/cmplz.zip
 
 # Git-deployed: the theme (refreshed from the image on every start).
 COPY wp-content/themes/amu/ /opt/amu-theme/amu/

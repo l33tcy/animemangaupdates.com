@@ -29,9 +29,9 @@ cp -a /opt/amu-theme/amu/. "$WPC/themes/amu/"
 # DROP-IN — custom fatal-error (HTTP 500) page, refreshed from the image each start.
 [ -f /opt/amu-seed/php-error.php ] && cp -a /opt/amu-seed/php-error.php "$WPC/php-error.php"
 
-# PLUGINS — seed ACF + Yoast ONCE (only if missing), then leave them to the site
-# so wp-admin updates persist across deploys.
-for p in advanced-custom-fields wordpress-seo; do
+# PLUGINS — seed ACF + Yoast + Complianz ONCE (only if missing), then leave them to
+# the site so wp-admin updates + Complianz config persist across deploys.
+for p in advanced-custom-fields wordpress-seo complianz-gdpr; do
   [ -e "$WPC/plugins/$p" ] || cp -a "/opt/amu-seed/plugins/$p" "$WPC/plugins/" 2>/dev/null || true
 done
 
@@ -53,6 +53,7 @@ rm -f /var/www/html/wp-config.php 2>/dev/null || true
   # Keep the persisted plugins + git theme active (idempotent every deploy).
   wpc plugin is-active advanced-custom-fields >/dev/null 2>&1 || wpc plugin activate advanced-custom-fields >/dev/null 2>&1 || true
   wpc plugin is-active wordpress-seo          >/dev/null 2>&1 || wpc plugin activate wordpress-seo          >/dev/null 2>&1 || true
+  wpc plugin is-active complianz-gdpr         >/dev/null 2>&1 || wpc plugin activate complianz-gdpr         >/dev/null 2>&1 || true
   wpc theme activate amu >/dev/null 2>&1 || true
 
   # First-run only: pretty permalinks + Yoast schema identity (Organization).
