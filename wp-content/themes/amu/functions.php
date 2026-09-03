@@ -138,6 +138,27 @@ function amu_meta_author() {
 }
 add_action( 'wp_head', 'amu_meta_author', 1 );
 
+/* -------------------------------------------------------------- Google Reader Revenue Manager (Subscribe with Google) */
+function amu_swg_basic() {
+	if ( is_admin() ) {
+		return;
+	}
+	?>
+<script async type="application/javascript" src="https://news.google.com/swg/js/v1/swg-basic.js"></script>
+<script>
+  (self.SWG_BASIC = self.SWG_BASIC || []).push( basicSubscriptions => {
+    basicSubscriptions.init({
+      type: "NewsArticle",
+      isPartOfType: ["Product"],
+      isPartOfProductId: "CAow3ZTNDA:openaccess",
+      clientOptions: { theme: "light", lang: "en" },
+    });
+  });
+</script>
+	<?php
+}
+add_action( 'wp_head', 'amu_swg_basic', 20 );
+
 /* -------------------------------------------------------------- presentation helpers */
 
 /** Custom per-user avatar via 'amu_avatar' user meta (image URL). */
