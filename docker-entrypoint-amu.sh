@@ -13,8 +13,10 @@ mkdir -p "$WPC/themes/amu" "$WPC/plugins"
 # Only overwrite when the image ships a NEWER core than the docroot, so WordPress
 # auto-updates that landed in the volume are preserved across deploys.
 if [ -d /usr/src/wordpress ]; then
-  imgver=$(grep -oE "wp_version = '[^']+'" /usr/src/wordpress/wp-includes/version.php | grep -oE '[0-9.]+' | head -1)
-  curver=$(grep -oE "wp_version = '[^']+'" /var/www/html/wp-includes/version.php 2>/dev/null | grep -oE '[0-9.]+' | head -1)
+  # || true: on a FRESH volume the docroot has no version.php, the pipeline fails
+  # and set -euo pipefail would kill the script before the first-run core sync.
+  imgver=$(grep -oE "wp_version = '[^']+'" /usr/src/wordpress/wp-includes/version.php | grep -oE '[0-9.]+' | head -1 || true)
+  curver=$(grep -oE "wp_version = '[^']+'" /var/www/html/wp-includes/version.php 2>/dev/null | grep -oE '[0-9.]+' | head -1 || true)
   if [ -z "$curver" ] || [ "$(printf '%s\n%s\n' "$curver" "$imgver" | sort -V | tail -1)" != "$curver" ]; then
     ( cd /usr/src/wordpress && tar --exclude='./wp-content' -cf - . ) | ( cd /var/www/html && tar -xf - )
     echo "[core] synced ${curver:-none} -> $imgver from image"
@@ -27,7 +29,7 @@ fi
 cp -a /opt/amu-theme/amu/. "$WPC/themes/amu/"
 
 # DROP-IN — custom fatal-error (HTTP 500) page, refreshed from the image each start.
-[ -f /opt/amu-seed/php-error.php ] && cp -a /opt/amu-seed/php-error.php "$WPC/php-error.php"
+[ ! -f /opt/amu-seed/php-error.php ] || cp -a /opt/amu-seed/php-error.php "$WPC/php-error.php"
 
 # PLUGINS — seed ACF + Yoast + Complianz ONCE (only if missing), then leave them to
 # the site so wp-admin updates + Complianz config persist across deploys.
