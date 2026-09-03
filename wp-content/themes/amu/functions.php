@@ -807,6 +807,19 @@ add_filter( 'tag_rewrite_rules', function () {
 	return $rules;
 } );
 
+// The baseless rules above are generated per-term at flush time, so a newly
+// created category or tag 404s until the rules are regenerated. Flush when a
+// term changes so new archives resolve without a manual wp rewrite flush.
+// ponytail: soft flush per term change; debounce if bulk term imports get heavy.
+function amu_flush_term_rules( $term_id, $tt_id, $taxonomy ) {
+	if ( in_array( $taxonomy, array( 'category', 'post_tag' ), true ) ) {
+		flush_rewrite_rules( false );
+	}
+}
+add_action( 'created_term', 'amu_flush_term_rules', 10, 3 );
+add_action( 'edited_term',  'amu_flush_term_rules', 10, 3 );
+add_action( 'delete_term',  'amu_flush_term_rules', 10, 3 );
+
 // Category & tag archives: 20 posts per page (the homepage uses its own queries).
 add_action( 'pre_get_posts', function ( $q ) {
 	if ( is_admin() || ! $q->is_main_query() ) {
