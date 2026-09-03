@@ -484,20 +484,16 @@ function amu_add_toc( $content ) {
 }
 add_filter( 'the_content', 'amu_add_toc', 9 );
 
-/** "Follow on Google" preferred-source callout appended to every single post. */
-add_filter( 'the_content', function ( $content ) {
-	if ( ! is_singular( 'post' ) || ! in_the_loop() || ! is_main_query() ) {
-		return $content;
-	}
+/** "Follow on Google" preferred-source callout. Rendered under the hero image in single.php (shows for image-less posts too). */
+function amu_gsource_callout() {
 	$url = 'https://www.google.com/preferences/source?q=https%3A%2F%2Fanimemangaupdates.com%2F';
 	$g   = '<svg class="gsource-g" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z"/></svg>';
-	$box = '<aside class="gsource" aria-label="' . esc_attr__( 'Follow on Google', 'amu' ) . '">'
+	echo '<aside class="gsource" aria-label="' . esc_attr__( 'Follow on Google', 'amu' ) . '">'
 		. '<div class="gsource-text"><span class="gsource-eyebrow">' . esc_html__( 'Preferred source', 'amu' ) . '</span>'
 		. '<p class="gsource-title">' . sprintf( esc_html__( 'Follow %s on Google to see more of our guides in Search.', 'amu' ), esc_html( get_bloginfo( 'name' ) ) ) . '</p></div>'
 		. '<a class="gsource-btn" href="' . esc_url( $url ) . '" target="_blank" rel="noopener">' . $g . '<span>' . esc_html__( 'Follow on Google', 'amu' ) . '</span></a>'
-		. '</aside>';
-	return $content . $box;
-}, 25 );
+		. '</aside>'; // phpcs:ignore WordPress.Security.EscapeOutput -- inline svg is a trusted constant; text is escaped above.
+}
 
 /** Semantic, responsive tables: add scope to header cells, wrap in a scroll container (better a11y + SEO than a JS table plugin). */
 add_filter( 'the_content', function ( $content ) {

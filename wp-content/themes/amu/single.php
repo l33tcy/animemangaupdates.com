@@ -37,6 +37,8 @@ get_header();
 						<figure class="post-figure"><?php the_post_thumbnail( 'amu_hero' ); ?></figure>
 					<?php endif; ?>
 
+					<?php amu_gsource_callout(); // Follow-on-Google CTA directly under the hero image ?>
+
 					<div class="article-content">
 						<?php
 						the_content();
