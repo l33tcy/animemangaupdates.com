@@ -516,6 +516,20 @@ function amu_gsource_callout() {
 		. '</aside>'; // phpcs:ignore WordPress.Security.EscapeOutput -- inline svg is a trusted constant; text is escaped above.
 }
 
+/** Google Reader Revenue Manager inline CTA, injected inside post content after the first paragraph. */
+add_filter( 'the_content', function ( $content ) {
+	if ( ! is_singular( 'post' ) || ! in_the_loop() || ! is_main_query() ) {
+		return $content;
+	}
+	$cta = '<div rrm-inline-cta="b2dc2184-034b-4b1c-a99f-207368a88294"></div>';
+	$pos = stripos( $content, '</p>' );
+	if ( false !== $pos ) {
+		$at = $pos + 4;
+		return substr( $content, 0, $at ) . "\n" . $cta . "\n" . substr( $content, $at );
+	}
+	return $content . $cta;
+}, 30 );
+
 /** Semantic, responsive tables: add scope to header cells, wrap in a scroll container (better a11y + SEO than a JS table plugin). */
 add_filter( 'the_content', function ( $content ) {
 	if ( ! is_singular( 'post' ) || false === stripos( $content, '<table' ) ) {
